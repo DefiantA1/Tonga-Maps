@@ -2,6 +2,7 @@
 
 import { AdvancedMarker, APIProvider, Map} from "@vis.gl/react-google-maps";
 import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 
 export const containerStyle = {
     width: '100%',
@@ -63,7 +64,7 @@ function MyLocationMarker(){
       position={center}
       zIndex={2}
       title={'myLocation'}
-      onClick={() => {}}
+      onClick={() => toast.info("That's My Location")}
     >
       <div className="relative flex items-center justify-center">
           <span
