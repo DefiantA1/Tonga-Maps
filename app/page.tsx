@@ -1,8 +1,9 @@
 'use client'
 
 import { AdvancedMarker, APIProvider, Map, MapMouseEvent, useMap} from "@vis.gl/react-google-maps";
-import { useEffect, useRef, useState } from "react";
-import { toast } from "react-toastify";
+import { useRef, useState } from "react";
+import { PanController } from "./components/map/PanController";
+import { MyMarker } from "./components/map/MyMarker";
 
 export const containerStyle = {
     width: '100%',
@@ -21,21 +22,6 @@ export default function Home() {
   const dragged = useRef(false);
   const [markerPosition, setMarkerPosition] = useState<{lat: number, lng: number} | null>(null);
 
-  function handleMapClick(e: MapMouseEvent){
-    // returns if a drag was detected
-    if(dragged.current){
-      dragged.current = false;
-      return;
-    }
-
-    const latLng = e.detail.latLng;
-
-    setMarkerPosition({
-      lat: latLng.lat,
-      lng: latLng.lng,
-    });
-  }
-
   return (
       <APIProvider apiKey={process.env.NEXT_PUBLIC_GOOGLE_MAP_API_KEY!}>
         <Map
@@ -51,7 +37,7 @@ export default function Home() {
           onClick={(e) => handleMapClick(e)}
           disableDefaultUI
         >
-          <MyLocationMarker/>
+          <MyMarker/>
           <PanController target={markerPosition} />
           {
             markerPosition != null && <AdvancedMarker position={markerPosition} />
@@ -59,73 +45,20 @@ export default function Home() {
         </Map>
       </APIProvider>
   );
-}
 
-function PanController({
-  target,
-}: {
-  target: any | null;
-}) {
-  const map = useMap();
 
-  useEffect(() => {
-    if (map && target) {
-      map.panTo(target);
-    }
-  }, [map, target]);
-
-  return null;
-}
-
-function MyLocationMarker(){
-
-  const [location, setLocation] = useState<{lat: number, lng: number} | null>(null);
-  
-  useEffect(() => {
-    const getMyLocation = () => {
-      if(!navigator.geolocation){
-        console.log('Geolocation is not supported');
-        return;
-      }
-
-      navigator.geolocation.getCurrentPosition((pos) => {
-        setLocation({
-          lat: pos.coords.latitude,
-          lng: pos.coords.longitude
-        });
-      }, (err) => {}, {enableHighAccuracy: true, timeout: 15000});
+  function handleMapClick(e: MapMouseEvent){
+    // returns if a drag was detected
+    if(dragged.current){
+      dragged.current = false;
+      return;
     }
 
-    getMyLocation();
-  }, [])
-  
-  return (
-    <>
-      {
-        location != null && <AdvancedMarker
-          position={location}
-          zIndex={2}
-          title={'myLocation'}
-          onClick={() => toast.info("That's My Location")}
-        >
-          <div className="relative flex items-center justify-center">
-              <span
-                className="absolute size-8 animate-ping rounded-full opacity-40"
-                style={{ backgroundColor: "#3eb06b" }}
-              />
-              <span
-                className={`relative block size-3.5 rounded-full border-2 ${
-                    "scale-125 ring-2 ring-white/30" 
-                }`}
-                style={{
-                  backgroundColor: "#3eb06b",
-                  borderColor: `#ffffff99`,
-                  boxShadow: `0 0 12px #ffffff66`,
-                }}
-              />
-            </div>
-        </AdvancedMarker>
-      }
-    </>
-  );
+    const latLng = e.detail.latLng;
+
+    setMarkerPosition({
+      lat: latLng.lat,
+      lng: latLng.lng,
+    });
+  }
 }
