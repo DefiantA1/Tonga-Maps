@@ -5,6 +5,9 @@ import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
 import { PanController } from "./components/map/PanController";
 import { MyMarker } from "./components/map/MyMarker";
 import { AddShopModal } from "./components/map/AddShopModal";
+import { collection, onSnapshot } from "firebase/firestore";
+import { db } from "./firebase/firebase";
+import { ShopMarker } from "./components/map/markers/ShopMarker";
 
 
 export const containerStyle = {
@@ -23,8 +26,44 @@ const nukualofa = {
 export default function Home() {
   const dragged = useRef(false);
   const [markerPosition, setMarkerPosition] = useState<{lat: number, lng: number} | null>(null);
-
   const [isOpen, setIsOpen] = useState(false);
+
+  const [shops, setShops] = useState<Shop[]>([]);
+
+
+  useEffect(() => {
+      const unsubscribe = onSnapshot(
+        collection(db, 'markers'),
+        (snapshot) => {
+          snapshot.docChanges().forEach((change) => {
+            const shop  = {
+              id: change.doc.id,
+              ...change.doc.data(),
+            } as Shop;
+
+            if (change.type === 'added') {
+              setShops((prev) => [...prev, shop]);
+            }
+
+            if (change.type === 'modified') {
+              setShops((prev) =>
+                prev.map((m) =>
+                  m.id === shop.id ? shop : m
+                )
+              );
+            }
+
+            if (change.type === 'removed') {
+              setShops((prev) =>
+                prev.filter((m) => m.id !== shop.id)
+              );
+            }
+          });
+        }
+      );
+
+      return unsubscribe;
+  }, [])
 
 
   return (
@@ -53,7 +92,11 @@ export default function Home() {
                 setIsOpen(false);
                 setMarkerPosition(null);
               }}
+              markerPosition={markerPosition}
             />
+            {
+              shops.map((s) => (<ShopMarker key={s.id} shop={s}/>))
+            }
         </Map>
       </APIProvider>
   );
