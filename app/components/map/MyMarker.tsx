@@ -1,9 +1,10 @@
-import { AdvancedMarker } from "@vis.gl/react-google-maps";
+import { AdvancedMarker, useMap } from "@vis.gl/react-google-maps";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
-export function MyMarker(){
 
+export function MyMarker(){
+  const map = useMap();
   const [location, setLocation] = useState<{lat: number, lng: number} | null>(null);
   
   useEffect(() => {
@@ -18,6 +19,15 @@ export function MyMarker(){
           lat: pos.coords.latitude,
           lng: pos.coords.longitude
         });
+
+        if(map){
+          const offset = {
+            lat: pos.coords.latitude, 
+            lng: pos.coords.longitude
+          };
+
+          map.panTo(offset);
+        }
       }, (err) => {}, {enableHighAccuracy: true, timeout: 15000});
     }
 
