@@ -74,7 +74,7 @@ export function AddShopModal({isOpen, exit, markerPosition} : AddShopModalProps)
 
   function AddBtn(){
     return (
-      <div onClick={handleAddShop} className="bg-green-500 w-full p-3 mt-4 rounded text-white font-semibold text-center">
+      <div onClick={handleAddShop} className="cursor-pointer bg-green-500 w-full p-3 mt-4 rounded text-white font-semibold text-center">
         {loading 
           ? <div className="flex flex-row items-center justify-center">
               <Spinner size="sm"/>
