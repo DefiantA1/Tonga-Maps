@@ -1,10 +1,10 @@
 'use client'
 
-import { db, storage } from "@/app/firebase/firebase";
+import { auth, db, storage } from "@/app/firebase/firebase";
 import { addDoc, collection } from "firebase/firestore";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { ShoppingCart, X } from "lucide-react";
-import { ChangeEvent, Dispatch, SetStateAction, useState } from "react";
+import { ChangeEvent, Dispatch, SetStateAction, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
 type AddShopModalProps = {
