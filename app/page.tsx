@@ -108,10 +108,14 @@ export default function Home() {
       dragged.current = false;
       return;
     }
+    
+    const latLng = e.detail.latLng;
+
+    if(latLng == null){
+      return;
+    }
 
     setIsOpen(true);
-
-    const latLng = e.detail.latLng;
 
     setMarkerPosition({
       lat: latLng.lat,
