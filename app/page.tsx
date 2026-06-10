@@ -1,13 +1,15 @@
 'use client'
 
 import { AdvancedMarker, APIProvider, Map, MapMouseEvent, useMap} from "@vis.gl/react-google-maps";
-import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { PanController } from "./components/map/PanController";
 import { MyMarker } from "./components/map/MyMarker";
-import { AddShopModal } from "./components/map/AddShopModal";
+import { AddShopModal } from "./components/modals/AddShopModal";
 import { collection, onSnapshot } from "firebase/firestore";
-import { db } from "./firebase/firebase";
+import { auth, db } from "./firebase/firebase";
 import { ShopMarker } from "./components/map/markers/ShopMarker";
+import Switch from "./components/misc/switch";
+import { LoginModal } from "./components/modals/LoginModal";
 
 
 export const containerStyle = {
@@ -26,9 +28,12 @@ const nukualofa = {
 export default function Home() {
   const dragged = useRef(false);
   const [markerPosition, setMarkerPosition] = useState<{lat: number, lng: number} | null>(null);
-  const [isOpen, setIsOpen] = useState(false);
+  const [shopModalOpen, setShopModalOpen] = useState(false);
+  const [loginModalOpen, setLoginModalOpen] = useState(false);
 
   const [shops, setShops] = useState<Shop[]>([]);
+
+  const [mapTypeId, setMapTypeId] = useState<'roadmap' | 'satellite'>('roadmap');
 
 
   useEffect(() => {
@@ -67,6 +72,7 @@ export default function Home() {
 
 
   return (
+    <div className="relative">
       <APIProvider apiKey={process.env.NEXT_PUBLIC_GOOGLE_MAP_API_KEY!}>
         <Map
           style={{width: '100vw', height: '100vh'}}
@@ -79,7 +85,9 @@ export default function Home() {
             dragged.current = true;
           }}
           onClick={(e) => handleMapClick(e)}
+          keyboardShortcuts={false}
           disableDefaultUI={true}
+          mapTypeId={mapTypeId}
         >
             <MyMarker/>
             <PanController target={markerPosition} />
@@ -87,19 +95,37 @@ export default function Home() {
               markerPosition != null && <AdvancedMarker position={markerPosition} />
             }
             <AddShopModal 
-              isOpen={isOpen} 
+              isOpen={shopModalOpen} 
               exit={() => {
-                setIsOpen(false);
+                setShopModalOpen(false);
                 setMarkerPosition(null);
               }}
               markerPosition={markerPosition}
             />
+            <LoginModal isOpen={loginModalOpen} exit={() => setLoginModalOpen(false)}/>
             {
               shops.filter((s) => !s.pending).map((s) => (<ShopMarker key={s.id} shop={s}/>))
             }
         </Map>
       </APIProvider>
+      <div className="absolute top-5 right-5 flex flex-row gap-3">
+        <Switch value={mapTypeId == 'roadmap'} onChange={() => toggleMap()}/>
+        <p className="bg-gray-600 px-2 py-1 rounded" onClick={() => toggleMap()}>{mapTypeId == 'roadmap' ? 'Road Map' : 'Satellite'}</p>
+      </div>
+      <div className="absolute top-4 left-4">
+        <img src={'/defiant-logo.png'} className="h-12 w-12"/>
+      </div>
+    </div>
   );
+
+  function toggleMap(){
+    if(mapTypeId == 'roadmap'){
+      setMapTypeId('satellite');
+      return;
+    }
+
+    setMapTypeId('roadmap');
+  }
 
 
   function handleMapClick(e: MapMouseEvent){
@@ -115,7 +141,12 @@ export default function Home() {
       return;
     }
 
-    setIsOpen(true);
+    if(auth.currentUser == null){
+      setLoginModalOpen(true);
+      return;
+    }
+
+    setShopModalOpen(true);
 
     setMarkerPosition({
       lat: latLng.lat,
