@@ -33,6 +33,7 @@ export const ShopMarker = ({shop} : ShopMarkerProps) => {
                         className="text-black my-0 py-0"
                     >
                         <h3 className="mb-1 font-semibold text-lg">{shop.name}</h3>
+                        <p className="mb-1">Added on {convertToDt(shop.createdAt)}</p>
                         {
                             shop.imgUrl != null && 
                                 <img
@@ -68,4 +69,18 @@ export const ShopMarker = ({shop} : ShopMarkerProps) => {
             }
         </div>
     );
+}
+
+
+function convertToDt(ms: number){
+    const dt = new Date(ms);
+
+    const monthIndex = dt.getMonth();
+    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+    const dayIndex = dt.getDay();
+    const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+
+
+    return `${days[dayIndex]}, ${dt.getDate()} ${months[monthIndex]} ${dt.getFullYear()}`;
 }
