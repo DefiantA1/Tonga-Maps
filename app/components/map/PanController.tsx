@@ -11,13 +11,14 @@ export function PanController({
   useEffect(() => {
     if (map && target) {
 
-      const latOffset = 0;
+      const latOffset = -0.0006;
       const lngOffset = 0;
 
       const offset = {
         lat: target.lat + latOffset, 
         lng: target.lng + lngOffset
       };
+
 
       map.panTo(offset);
     }
