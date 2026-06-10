@@ -1,7 +1,7 @@
 'use client'
 
 import { AdvancedMarker, APIProvider, Map, MapMouseEvent, useMap} from "@vis.gl/react-google-maps";
-import { Dispatch, SetStateAction, useRef, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
 import { PanController } from "./components/map/PanController";
 import { MyMarker } from "./components/map/MyMarker";
 import { AddShopModal } from "./components/map/AddShopModal";
@@ -26,6 +26,7 @@ export default function Home() {
 
   const [isOpen, setIsOpen] = useState(false);
 
+
   return (
       <APIProvider apiKey={process.env.NEXT_PUBLIC_GOOGLE_MAP_API_KEY!}>
         <Map
@@ -39,14 +40,20 @@ export default function Home() {
             dragged.current = true;
           }}
           onClick={(e) => handleMapClick(e)}
-          disableDefaultUI
+          // disableDefaultUI
         >
             <MyMarker/>
             <PanController target={markerPosition} />
             {
               markerPosition != null && <AdvancedMarker position={markerPosition} />
             }
-            <AddShopModal isOpen={isOpen} setIsOpen={setIsOpen}/>
+            <AddShopModal 
+              isOpen={isOpen} 
+              exit={() => {
+                setIsOpen(false);
+                setMarkerPosition(null);
+              }}
+            />
         </Map>
       </APIProvider>
   );
