@@ -6,13 +6,22 @@ import { toast } from "react-toastify";
 
 type AddShopModalProps = {
   isOpen: boolean,
-  setIsOpen: Dispatch<SetStateAction<boolean>>
+  exit: () => void,
 }
 
-export function AddShopModal({isOpen, setIsOpen} : AddShopModalProps){
+export function AddShopModal({isOpen, exit} : AddShopModalProps){
+  const [name, setName] = useState<string>("");
+  const [acceptsBSP, setAcceptsBSP] = useState<boolean>(false);
+  const [acceptsANZ, setAcceptsANZ] = useState<boolean>(false);
+
+  const [loading, isLoading] = useState<boolean>(false);
   
   function exitModal(){
-    setIsOpen(false);
+    setName("");
+    setAcceptsANZ(false);
+    setAcceptsBSP(false);
+
+    exit();
   }
   
   return (
@@ -36,22 +45,69 @@ export function AddShopModal({isOpen, setIsOpen} : AddShopModalProps){
           <X onClick={() => exitModal()}/>
         </div>
         <hr className="mt-2 mb-4"/>
-        <Field fieldName={"Shop Name"}/>
+        <Field title={"Shop Name"} value={name} setValue={setName}/>
         <ImgField/>
+        <CardBoxes
+          anz={acceptsANZ}
+          bsp={acceptsBSP}
+          onANZChange={(v) => setAcceptsANZ(v)} 
+          onBSPChange={(v) => setAcceptsBSP(v)}
+        />
+        <AddBtn/>
       </div>
     </div>
   );
+
+  function AddBtn(){
+    return (
+      <button onClick={handleAddShop} className="bg-green-500 w-full p-3 mt-4 rounded text-white font-semibold">Add Shop</button>
+    );
+  }
+
+  async function handleAddShop(){
+    try{
+      if(name == ''){
+        throw Error('Please provide name of shop');
+      }
+
+      if(acceptsANZ == false && acceptsBSP == false){
+        throw new Error('Which card does this shop provide?');
+      }
+
+      const newShop : Shop = {
+        name: name,
+        acceptsANZ: acceptsANZ,
+        acceptsBSP: acceptsBSP,
+        createdAt: new Date().getTime(),
+      };
+
+      const toastId = toast.loading('Uploading Now...');
+
+      
+      toast.update(toastId, {
+        type: 'success',
+        autoClose: 2000,
+        isLoading: false,
+        render: 'Upload Complete!'
+      })
+    }
+    catch(err){
+      toast.error(`${err}`);
+    }
+  }
 }
 
 type FieldProps = {
-  fieldName: string
+  title: string,
+  value: string,
+  setValue: Dispatch<SetStateAction<string>>,
 }
 
-function Field({fieldName} : FieldProps){
+function Field({title, setValue, value} : FieldProps){
   return (
     <div className="mb-4">
-      <p>{fieldName}</p>
-      <input className="bg-gray-200 w-full p-2 rounded"/>
+      <p>{title}</p>
+      <input value={value} onChange={(e) => setValue(e.target.value)} className="bg-gray-200 w-full p-2 rounded"/>
     </div>
   );
 }
@@ -77,7 +133,7 @@ function ImgField(){
       <p className="mb-2">Picture of Shop (Optional)</p>
       
       {
-        previewUrl == null && <label htmlFor="image-picker-input" className="cursor-pointer rounded-md bg-gray-300 p-3 text-sm text-black pr-10 shadow-sm hover:bg-blue-500 transition-colors">Upload Photo Here (Optional)</label>
+        previewUrl == null && <label htmlFor="image-picker-input" className="cursor-pointer rounded-md p-3 text-sm text-black text-center bg-gray-200 w-full block hover:bg-blue-500 transition-colors">Upload Photo (Optional)</label>
       }
 
       <input id="image-picker-input" className="hidden" type="file" accept="image/*" onChange={(e) => handleFileChange(e)}/>
@@ -85,12 +141,38 @@ function ImgField(){
         previewUrl != null && <div className="relative">
           <img
               src={previewUrl}
-              className="h-50 rounded-lg"
+              className="w-full rounded-lg"
               alt="Uploaded preview"
             />
-          <X className="absolute top-3 right-3 text-black bg-red-400 p-1 rounded-xl" onClick={() => (setPreviewUrl(null))}/>
+          <X className="absolute top-3 right-3 text-black bg-red-400 p-1 rounded-xl" onClick={() => {
+            setPreviewUrl(null);
+            setFileName('');
+          }}/>
         </div>
       }
+    </div>
+  );
+}
+
+type CardBoxesProps = {
+  anz: boolean,
+  bsp: boolean,
+  onBSPChange: (v: boolean) => void,
+  onANZChange: (v: boolean) => void
+}
+
+function CardBoxes({onBSPChange, onANZChange, anz, bsp} : CardBoxesProps){
+  return (
+    <div className="mt-5">
+      <p>This Shop Accepts</p>
+      <div className="flex flex-row items-center">
+        <input checked={bsp} onChange={(e) => onBSPChange(e.target.checked)} id="bspCheckBox" type="checkbox" className="bg-gray-300 checked:bg-indigo-600 m-2 w-5 h-5 rounded"/>
+        <label htmlFor="bspCheckBox">BSP</label>
+      </div>
+      <div className="flex flex-row items-center">
+        <input checked={anz} onChange={(e) => onANZChange(e.target.checked)} id="anzCheckBox" type="checkbox" className="bg-gray-300 m-2 w-5 h-5 rounded"/>
+        <label htmlFor="anzCheckBox">ANZ</label>
+      </div>
     </div>
   );
 }
