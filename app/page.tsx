@@ -13,7 +13,7 @@ export const containerStyle = {
     borderRadius: '15px 0px 0px 15px',
 };
 
-const zoom = 15
+const zoom = 18
 
 const nukualofa = {
   lat: -21.1394,
@@ -40,7 +40,7 @@ export default function Home() {
             dragged.current = true;
           }}
           onClick={(e) => handleMapClick(e)}
-          // disableDefaultUI
+          
         >
             <MyMarker/>
             <PanController target={markerPosition} />
