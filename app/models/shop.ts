@@ -4,5 +4,10 @@ type Shop = {
     acceptsBSP: boolean,
     acceptsANZ: boolean,
     createdAt: number,
-    createdBy?: string | null
+    createdBy?: string | null,
+    lat: number,
+    lng: number,
+    pending: boolean,
+    id?: string,
+    comment?: string | null
 }
