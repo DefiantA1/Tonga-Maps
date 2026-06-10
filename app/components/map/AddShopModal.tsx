@@ -14,12 +14,13 @@ export function AddShopModal({isOpen, exit} : AddShopModalProps){
   const [acceptsBSP, setAcceptsBSP] = useState<boolean>(false);
   const [acceptsANZ, setAcceptsANZ] = useState<boolean>(false);
 
-  const [loading, isLoading] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
   
   function exitModal(){
     setName("");
     setAcceptsANZ(false);
     setAcceptsBSP(false);
+    setLoading(false);
 
     exit();
   }
@@ -60,12 +61,24 @@ export function AddShopModal({isOpen, exit} : AddShopModalProps){
 
   function AddBtn(){
     return (
-      <button onClick={handleAddShop} className="bg-green-500 w-full p-3 mt-4 rounded text-white font-semibold">Add Shop</button>
+      <div onClick={handleAddShop} className="bg-green-500 w-full p-3 mt-4 rounded text-white font-semibold text-center">
+        {loading 
+          ? <div className="flex flex-row items-center justify-center">
+              <Spinner size="sm"/>
+              <p className="ml-2">Loading...</p>
+            </div> 
+          : <p>Add Shop</p>}
+      </div>
     );
   }
 
   async function handleAddShop(){
     try{
+      if(loading){
+        toast.info('Still loading...');
+        return;
+      }
+
       if(name == ''){
         throw Error('Please provide name of shop');
       }
@@ -73,6 +86,8 @@ export function AddShopModal({isOpen, exit} : AddShopModalProps){
       if(acceptsANZ == false && acceptsBSP == false){
         throw new Error('Which card does this shop provide?');
       }
+
+      setLoading(true);
 
       const newShop : Shop = {
         name: name,
@@ -95,6 +110,22 @@ export function AddShopModal({isOpen, exit} : AddShopModalProps){
       toast.error(`${err}`);
     }
   }
+}
+
+export function Spinner({ size = "md" }) {
+  const sizeClasses : any = {
+    sm: "h-5 w-5 border-2",
+    md: "h-8 w-8 border-4",
+    lg: "h-12 w-12 border-4",
+  };
+
+  return (
+    <div className="flex items-center justify-center">
+      <div
+        className={`${sizeClasses[size]} animate-spin rounded-full border-gray-200 border-t-blue-600`}
+      />
+    </div>
+  );
 }
 
 type FieldProps = {
@@ -144,7 +175,7 @@ function ImgField(){
               className="w-full rounded-lg"
               alt="Uploaded preview"
             />
-          <X className="absolute top-3 right-3 text-black bg-red-400 p-1 rounded-xl" onClick={() => {
+          <X className="absolute top-1 right-1 text-black font-bold bg-red-400 p-1 border-1 rounded-xl" onClick={() => {
             setPreviewUrl(null);
             setFileName('');
           }}/>
