@@ -79,7 +79,7 @@ export default function Home() {
             dragged.current = true;
           }}
           onClick={(e) => handleMapClick(e)}
-          
+          disableDefaultUI={true}
         >
             <MyMarker/>
             <PanController target={markerPosition} />
@@ -95,7 +95,7 @@ export default function Home() {
               markerPosition={markerPosition}
             />
             {
-              shops.map((s) => (<ShopMarker key={s.id} shop={s}/>))
+              shops.filter((s) => !s.pending).map((s) => (<ShopMarker key={s.id} shop={s}/>))
             }
         </Map>
       </APIProvider>
