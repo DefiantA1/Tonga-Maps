@@ -5,6 +5,7 @@ import { Dispatch, SetStateAction, useState } from "react";
 import { auth, googleProvider } from "../firebase/firebase";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
+import { LogoText } from "../components/misc/logotext";
 
 export default function LoginPage(){
     const router = useRouter();
@@ -16,6 +17,9 @@ export default function LoginPage(){
     return (
         <div style={{backgroundColor: 'white'}} className="w-screen h-screen flex flex-col justify-center items-center">
             <div className="text-gray-800 px-5">
+                <div className="flex flex-row items-center justify-center mb-4">
+                    <img className="h-14 w-14" src={'/defiant-logo.png'}/>
+                </div>
                 <h2 className="font-semibold text-xl text-center block mb-1">Welcome to Tonga Maps</h2>
                 <p className="text-gray-600 text-sm text-center mb-8">Find Stores in Tonga that accept BSP and ANZ Cards</p>
                 <LoginField title={'Email'} value={email} setValue={setEmail}/>
