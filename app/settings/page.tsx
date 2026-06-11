@@ -35,7 +35,7 @@ const SettingsPage = () => {
     
     return (
         <div className="bg-white w-screen h-screen p-5 text-gray-700">
-            <ArrowLeft/>
+            <ArrowLeft onClick={() => router.push('/')}/>
             <div className="mt-5">
                 <h2 className="text-xl">Settings Page</h2>
                 {
