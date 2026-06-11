@@ -35,13 +35,13 @@ const SettingsPage = () => {
     
     return (
         <div className="bg-white w-screen h-screen p-5 text-gray-700">
-            <ArrowLeft onClick={() => router.push('/')}/>
+            <ArrowLeft className="cursor-pointer" onClick={() => router.push('/')}/>
             <div className="mt-5">
-                <h2 className="text-xl">Settings Page</h2>
+                <h2 className="text-2xl">Settings Page</h2>
                 {
                     user != null && <p className="text-black">Hi {user.name}!</p>
                 }
-                <button className="bg-blue-500 w-full my-3 p-2 rounded text-white" onClick={() => logOut()}>Logout</button>
+                <button className="cursor-pointer bg-blue-500 my-3 p-2 rounded text-white" onClick={() => logOut()}>Logout</button>
             </div>
         </div>
     );
