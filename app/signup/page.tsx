@@ -23,7 +23,7 @@ export default function SignUpPage(){
     return (
         <div className="bg-white h-screen w-screen flex flex-col items-center justify-center">
             <div className="text-gray-800 px-4">
-                <ArrowLeft className="mb-5" onClick={() => router.push('/')}/>
+                <ArrowLeft className="mb-5 cursor-pointer" onClick={() => router.push('/')}/>
                 <h2 className="font-semibold text-xl block mb-1">Sign Up to Tonga Maps</h2>
                 <p className="text-gray-600 text-sm mb-5">Find Stores in Tonga that accept BSP and ANZ Cards</p>
                 <div className="flex flex-row gap-3">
@@ -45,7 +45,7 @@ export default function SignUpPage(){
                     <p className="text-sm text-gray-400 font-semibold">OR</p>
                     <hr className="text-gray-300 border flex-1"/>
                 </div>
-                <button onClick={() => authWithGoogle()} className="bg-gray-200 w-full rounded-full mx-auto text-center p-3 px-4 mt-7 flex flex-row items-center justify-between">
+                <button onClick={() => authWithGoogle()} className="cursor-pointer bg-gray-200 w-full rounded-full mx-auto text-center p-3 px-4 mt-7 flex flex-row items-center justify-between">
                     <img src={'/google.png'} className="w-7 h-7"/>
                     <p className="font-semibold">Continue with Google</p>
                     <div className="w-7 h-7"></div>
@@ -114,7 +114,8 @@ export default function SignUpPage(){
                 name: `${firstName.trim()} ${lastName.trim()}`,
                 createdAt: new Date().getTime(),
                 uid: result.user.uid,
-                type: 'normal'
+                type: 'normal',
+                loginType: 'emailPassword'
             };
 
             // save to local storage

@@ -34,14 +34,14 @@ export function LoginModal({isOpen, exit} : LoginModalProps){
         >
             <div className="flex flex-row justify-between">
                 <h2 className="font-semibold">Add Shop?</h2>
-                <X onClick={() => exit()}/>
+                <X className="cursor-pointer" onClick={() => exit()}/>
             </div>
             <hr className="mb-3 mt-2"/>
             <p>Do you want to add shop? You have to first login or create an account.</p>
             <div className="flex flex-row gap-3 mt-3 items-center">
-                <button onClick={() => goToLoginPage()} className="bg-blue-500 text-white p-2 flex-1 rounded">Login</button>
+                <button onClick={() => goToLoginPage()} className="cursor-pointer bg-blue-500 text-white p-2 flex-1 rounded">Login</button>
                 <p className="text-sm text-gray-500 font-semibold">OR</p>
-                <button onClick={() => goToSignUpPage()} className="bg-blue-500 text-white p-2 flex-1 rounded">Sign Up</button>
+                <button onClick={() => goToSignUpPage()} className="cursor-pointer bg-blue-500 text-white p-2 flex-1 rounded">Sign Up</button>
             </div>
             <LogoText/>
         </div>

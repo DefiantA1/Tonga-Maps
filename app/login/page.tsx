@@ -19,7 +19,7 @@ export default function LoginPage(){
     return (
         <div style={{backgroundColor: 'white'}} className="w-screen h-screen flex flex-col justify-center items-center">
             <div className="text-gray-800 px-5">
-                <ArrowLeft className="mb-5 text-gray-700" onClick={() => router.push('/')}/>
+                <ArrowLeft className="mb-5 text-gray-700 cursor-pointer" onClick={() => router.push('/')}/>
                 <div className="flex flex-row items-center justify-center mb-4">
                     <img className="h-14 w-14" src={'/defiant-logo.png'}/>
                 </div>
@@ -45,8 +45,8 @@ export default function LoginPage(){
                     <div className="w-7 h-7"></div>
                 </button>
                 <div onClick={() => goToSignUpPage()} className="flex flex-row gap-1 items-center justify-center mt-7">
-                    <p className="text-center text-color">Don't have an account?</p>
-                    <p className="text-blue-600 font-semibold">Sign Up</p>
+                    <p className="cursor-pointer text-center text-color">Don't have an account?</p>
+                    <p className="cursor-pointer text-blue-600 font-semibold">Sign Up</p>
                 </div>
             </div>
         </div>
