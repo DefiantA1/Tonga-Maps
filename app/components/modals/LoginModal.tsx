@@ -41,7 +41,7 @@ export function LoginModal({isOpen, exit} : LoginModalProps){
             <div className="flex flex-row gap-3 mt-3 items-center">
                 <button onClick={() => goToLoginPage()} className="bg-blue-500 text-white p-2 flex-1 rounded">Login</button>
                 <p className="text-sm text-gray-500 font-semibold">OR</p>
-                <button onClick={() => goToLoginPage()} className="bg-blue-500 text-white p-2 flex-1 rounded">Sign Up</button>
+                <button onClick={() => goToSignUpPage()} className="bg-blue-500 text-white p-2 flex-1 rounded">Sign Up</button>
             </div>
             <LogoText/>
         </div>
@@ -54,5 +54,9 @@ export function LoginModal({isOpen, exit} : LoginModalProps){
 
     function goToLoginPage(){
         router.push('/login');
+    }
+
+    function goToSignUpPage(){
+        router.push('/signup');
     }
 }
