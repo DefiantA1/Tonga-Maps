@@ -10,8 +10,9 @@ import { auth, db } from "./firebase/firebase";
 import { ShopMarker } from "./components/map/markers/ShopMarker";
 import Switch from "./components/misc/switch";
 import { LoginModal } from "./components/modals/LoginModal";
-import { Settings } from "lucide-react";
+import { House, Settings, ShoppingCart } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { toast } from "react-toastify";
 
 
 export const containerStyle = {
@@ -76,56 +77,76 @@ export default function Home() {
 
 
   return (
-    <div className="relative">
-      <APIProvider apiKey={process.env.NEXT_PUBLIC_GOOGLE_MAP_API_KEY!}>
-        <Map
-          style={{width: '100vw', height: '100vh'}}
-          mapId={process.env.NEXT_PUBLIC_MAP_ID!}
-          defaultCenter={nukualofa}
-          defaultZoom={zoom}
-          gestureHandling='greedy'
-          colorScheme="DARK"
-          onDragstart={() => {
-            dragged.current = true;
-          }}
-          onClick={(e) => handleMapClick(e)}
-          keyboardShortcuts={false}
-          disableDefaultUI={true}
-          mapTypeId={mapTypeId}
-        >
-            <MyMarker/>
-            <PanController target={markerPosition} />
-            {
-              markerPosition != null && <AdvancedMarker position={markerPosition} />
-            }
-            <AddShopModal 
-              isOpen={shopModalOpen} 
-              exit={() => {
-                setShopModalOpen(false);
-                setMarkerPosition(null);
-              }}
-              markerPosition={markerPosition}
-            />
-            <LoginModal isOpen={loginModalOpen} exit={() => setLoginModalOpen(false)}/>
-            {
-              shops.filter((s) => !s.pending || s.uid == localStorage.getItem('uid') || localStorage.getItem('type') == 'super').map((s) => (<ShopMarker key={s.id} shop={s}/>))
-            }
-        </Map>
-      </APIProvider>
-      <div className="absolute top-5 right-2 flex flex-row gap-3 justify-center items-center">
-        <Switch value={mapTypeId == 'roadmap'} onChange={() => toggleMap()}/>
-        <p className="bg-gray-600 px-2 py-1 rounded" onClick={() => toggleMap()}>{mapTypeId == 'roadmap' ? 'Road Map' : 'Satellite'}</p>
-        {
-          <div onClick={() => goToSettingPage()} className="bg-gray-600 p-1 rounded-full">
-            <Settings/>
-          </div>
-        }
+    <div className="flex flex-row">
+      <div style={{backgroundColor: '#171414'}} className="w-80 h-screen hidden lg:block p-5">
+        <h2 className="text-xl font-semibold">Tonga Maps</h2>
+        <p>Shops That Accept Card Payments</p>
+        <ul>
+          {shops.length != 0 && shops.sort((a,b) => a.name.localeCompare(b.name)).map((s) => <li key={s.id} onClick={() => {handleShopTileClick({lat: s.lat, lng: s.lng})}}>
+            <div className="flex flex-row gap-3 my-3">
+              <ShoppingCart/>
+              <p>{s.name}</p>
+            </div>
+          </li>)}
+        </ul>
       </div>
-      <div className="absolute top-4 left-4">
-        <img src={'/defiant-logo.png'} className="h-12 w-12"/>
+      <div className="bg-blue-300 h-screen flex-1">
+        <div className="relative w-full h-full">
+          <APIProvider apiKey={process.env.NEXT_PUBLIC_GOOGLE_MAP_API_KEY!}>
+            <Map
+              style={{width: '100%', height: '100%'}}
+              mapId={process.env.NEXT_PUBLIC_MAP_ID!}
+              defaultCenter={nukualofa}
+              defaultZoom={zoom}
+              gestureHandling='greedy'
+              colorScheme="DARK"
+              onDragstart={() => {
+                dragged.current = true;
+              }}
+              onClick={(e) => handleMapClick(e)}
+              keyboardShortcuts={false}
+              disableDefaultUI={true}
+              mapTypeId={mapTypeId}
+            >
+                <MyMarker/>
+                <PanController target={markerPosition} />
+                {
+                  markerPosition != null && <AdvancedMarker position={markerPosition} />
+                }
+                <AddShopModal 
+                    isOpen={shopModalOpen} 
+                    exit={() => {
+                      setShopModalOpen(false);
+                      setMarkerPosition(null);
+                    }}
+                    markerPosition={markerPosition}
+                />
+                <LoginModal isOpen={loginModalOpen} exit={() => setLoginModalOpen(false)}/>
+                {
+                  shops.filter((s) => !s.pending || s.uid == localStorage.getItem('uid') || localStorage.getItem('type') == 'super').map((s) => (<ShopMarker key={s.id} shop={s}/>))
+                }
+            </Map>
+          </APIProvider>
+          <div className="absolute top-5 right-2 flex flex-row gap-3 justify-center items-center">
+            <Switch value={mapTypeId == 'roadmap'} onChange={() => toggleMap()}/>
+            <p className="bg-gray-600 px-2 py-1 rounded" onClick={() => toggleMap()}>{mapTypeId == 'roadmap' ? 'Road Map' : 'Satellite'}</p>
+            {
+              <div onClick={() => goToSettingPage()} className="bg-gray-600 p-1 rounded-full">
+                <Settings/>
+              </div>
+            }
+          </div>
+          <div className="absolute top-4 left-4">
+            <img src={'/defiant-logo.png'} className="h-12 w-12"/>
+          </div>
+        </div>
       </div>
     </div>
   );
+
+  function handleShopTileClick(latLng : {lat: number, lng: number}) {
+    toast.info('To Be Implemented');
+  }
 
   function toggleMap(){
     if(mapTypeId == 'roadmap'){
