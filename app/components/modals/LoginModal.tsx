@@ -18,6 +18,12 @@ export function LoginModal({isOpen, exit} : LoginModalProps){
 
     const router = useRouter();
 
+    function getSlideAnimation() : string{
+        return `absolute bottom-0 left-0 right-0 lg:left-auto lg:rounded-none lg:top-0 lg:pt-25 lg:w-85 bg-white rounded-t-3xl p-6 transition-transform duration-300 ease-out text-black ${
+            isOpen ? 'translate-y-0' : 'translate-y-full'
+        }`;
+    }
+
   
     return (
         <div
@@ -26,25 +32,25 @@ export function LoginModal({isOpen, exit} : LoginModalProps){
             }`}
             onClick={() => exitModal()}
         >
-        <div
-            className={`absolute bottom-0 left-0 right-0 bg-white rounded-t-3xl p-6 transition-transform duration-300 ease-out text-black ${
-            isOpen ? 'translate-y-0' : 'translate-y-full'
-            }`}
-            onClick={(e) => e.stopPropagation()}
-        >
-            <div className="flex flex-row justify-between">
-                <h2 className="font-semibold">Add Shop?</h2>
-                <X className="cursor-pointer" onClick={() => exit()}/>
+            <div
+                className={getSlideAnimation()}
+                onClick={(e) => e.stopPropagation()}
+            >
+                <div className="flex flex-row justify-between">
+                    <h2 className="font-semibold">Add Shop?</h2>
+                    <X className="cursor-pointer" onClick={() => exit()}/>
+                </div>
+                <hr className="mb-3 mt-2"/>
+                <p>Do you want to add shop? You have to first login or create an account.</p>
+                <div className="flex flex-row gap-3 mt-3 items-center">
+                    <button onClick={() => goToLoginPage()} className="cursor-pointer bg-blue-500 text-white p-2 flex-1 rounded">Login</button>
+                    <p className="text-sm text-gray-500 font-semibold">OR</p>
+                    <button onClick={() => goToSignUpPage()} className="cursor-pointer bg-blue-500 text-white p-2 flex-1 rounded">Sign Up</button>
+                </div>
+                <div className="mt-120">
+                    <LogoText/>
+                </div>
             </div>
-            <hr className="mb-3 mt-2"/>
-            <p>Do you want to add shop? You have to first login or create an account.</p>
-            <div className="flex flex-row gap-3 mt-3 items-center">
-                <button onClick={() => goToLoginPage()} className="cursor-pointer bg-blue-500 text-white p-2 flex-1 rounded">Login</button>
-                <p className="text-sm text-gray-500 font-semibold">OR</p>
-                <button onClick={() => goToSignUpPage()} className="cursor-pointer bg-blue-500 text-white p-2 flex-1 rounded">Sign Up</button>
-            </div>
-            <LogoText/>
-        </div>
         </div>
     );
 

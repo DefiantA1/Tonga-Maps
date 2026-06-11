@@ -34,6 +34,13 @@ export function AddShopModal({isOpen, exit, markerPosition} : AddShopModalProps)
 
     exit();
   }
+
+  function slideInformation(){
+    return `absolute bottom-0 left-0 lg:left-auto right-0 lg:w-90 lg:top-0 lg:rounded-none lg:pt-18 bg-white rounded-t-3xl p-6 transition-transform duration-300 ease-out text-black ${
+      isOpen ? "translate-y-0 lg:translate-y-0 lg:-translate-x-0"
+        : "translate-y-full lg:translate-y-0 lg:translate-x-full"
+    }`;
+  }
   
   return (
     <div
@@ -43,9 +50,7 @@ export function AddShopModal({isOpen, exit, markerPosition} : AddShopModalProps)
       onClick={() => exitModal()}
     >
       <div
-        className={`absolute bottom-0 left-0 right-0 bg-white rounded-t-3xl p-6 transition-transform duration-300 ease-out text-black ${
-          isOpen ? 'translate-y-0' : 'translate-y-full'
-        }`}
+        className={slideInformation()}
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex flex-row justify-between">
@@ -220,7 +225,7 @@ function ImgField({onFileChange} : ImgFieldProps){
       <p className="mb-2">Picture of Shop (Optional)</p>
       
       {
-        previewUrl == null && <label htmlFor="image-picker-input" className="cursor-pointer rounded-md p-3 text-sm text-gray-800 text-center bg-gray-200 w-full block hover:bg-blue-500 transition-colors">Upload Photo (Optional)</label>
+        previewUrl == null && <label htmlFor="image-picker-input" className="cursor-pointer rounded-md p-3 text-sm text-gray-800 text-center bg-gray-200 w-full block hover:bg-blue-500 hover:text-white transition-colors">Upload Photo (Optional)</label>
       }
 
       <input id="image-picker-input" className="hidden" type="file" accept="image/*" onChange={(e) => handleFileChange(e)}/>
@@ -231,7 +236,7 @@ function ImgField({onFileChange} : ImgFieldProps){
               className="w-full rounded-lg"
               alt="Uploaded preview"
             />
-          <X className="absolute top-1 right-1 text-black font-bold bg-red-400 p-1 border-1 rounded-xl" onClick={() => {
+          <X className="cursor-pointer absolute top-1 right-1 text-black font-bold bg-red-400 p-1 border-1 rounded-xl" onClick={() => {
             setPreviewUrl(null);
             setFileName('');
           }}/>
