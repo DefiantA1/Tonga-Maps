@@ -15,7 +15,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "Tonga Maps",
-  description: "Map to find which shops in Tonga have card payments",
+  description: "a map to find which shops in Tonga accept card payments",
 };
 
 export default function RootLayout({
