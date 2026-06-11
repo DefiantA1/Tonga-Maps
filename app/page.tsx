@@ -10,6 +10,8 @@ import { auth, db } from "./firebase/firebase";
 import { ShopMarker } from "./components/map/markers/ShopMarker";
 import Switch from "./components/misc/switch";
 import { LoginModal } from "./components/modals/LoginModal";
+import { Settings } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 
 export const containerStyle = {
@@ -34,6 +36,8 @@ export default function Home() {
   const [shops, setShops] = useState<Shop[]>([]);
 
   const [mapTypeId, setMapTypeId] = useState<'roadmap' | 'satellite'>('roadmap');
+
+  const router = useRouter();
 
 
   useEffect(() => {
@@ -108,9 +112,14 @@ export default function Home() {
             }
         </Map>
       </APIProvider>
-      <div className="absolute top-5 right-5 flex flex-row gap-3">
+      <div className="absolute top-5 right-2 flex flex-row gap-3 justify-center items-center">
         <Switch value={mapTypeId == 'roadmap'} onChange={() => toggleMap()}/>
         <p className="bg-gray-600 px-2 py-1 rounded" onClick={() => toggleMap()}>{mapTypeId == 'roadmap' ? 'Road Map' : 'Satellite'}</p>
+        {
+          <div onClick={() => goToSettingPage()} className="bg-gray-600 p-1 rounded-full">
+            <Settings/>
+          </div>
+        }
       </div>
       <div className="absolute top-4 left-4">
         <img src={'/defiant-logo.png'} className="h-12 w-12"/>
@@ -125,6 +134,15 @@ export default function Home() {
     }
 
     setMapTypeId('roadmap');
+  }
+
+  function goToSettingPage(){
+    if(auth.currentUser == null){
+      setLoginModalOpen(true);
+      return;
+    }
+
+    router.push('/settings');
   }
 
 

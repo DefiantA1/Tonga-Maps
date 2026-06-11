@@ -3,5 +3,6 @@ type User = {
     email: string,
     createdAt: number,
     uid: string,
-    type: 'super' | 'normal'
+    type: 'super' | 'normal',
+    loginType?: string
 }
