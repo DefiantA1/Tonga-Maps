@@ -2,11 +2,12 @@
 
 import { signInWithEmailAndPassword, signInWithPopup } from "firebase/auth";
 import { Dispatch, SetStateAction, useState } from "react";
-import { auth, googleProvider } from "../firebase/firebase";
+import { auth, db, googleProvider } from "../firebase/firebase";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 import { LogoText } from "../components/misc/logotext";
 import { ArrowLeft } from "lucide-react";
+import { addDoc, collection, getDoc, getDocs, query, where } from "firebase/firestore";
 
 export default function LoginPage(){
     const router = useRouter();
@@ -64,6 +65,27 @@ export default function LoginPage(){
             }
 
             const result = await signInWithEmailAndPassword(auth, email, password);
+            const userDocRef = collection(db, 'users');
+
+            const q = query(userDocRef, where('email', "==", email));
+            const snapshot = await getDocs(q);
+
+            const docs = snapshot.docs.map((d) => d.data());
+            console.log(docs);
+            
+            if(docs.length == 0){
+                throw Error('No user found for that email');
+            }
+
+            console.log("I'm Here!");
+
+            const user = docs[0] as User;
+
+            localStorage.setItem('email', user.email);
+            localStorage.setItem('name', user.name);
+            localStorage.setItem('uid', user.uid);
+            localStorage.setItem('type',user.type);
+            localStorage.setItem('createdAt', `${user.createdAt}`);
 
             router.push('/');
         }
@@ -77,6 +99,72 @@ export default function LoginPage(){
     async function authWithGoogle() {
         try{
             const result = await signInWithPopup(auth, googleProvider);
+            
+            if(result.user.displayName == null || result.user.email == null || result.user.uid == null){
+                throw Error('User data missing for auth');
+            }
+
+            const userMetaData = {
+                name: result.user.displayName,
+                email: result.user.email,
+                uid: result.user.uid,
+            }
+
+            const q = query(
+                collection(db, 'users'), 
+                where('email', "==", userMetaData.email)
+            );
+
+            const snapshot = await getDocs(q);
+            const docs = snapshot.docs.map((d) => d.data());
+
+            if(docs.length == 0){
+                // create doc in user collection
+                const toastId = toast.loading('Creating User Profile');
+
+                const user : User = {
+                    name: userMetaData.name,
+                    email: userMetaData.email,
+                    uid: userMetaData.uid,
+                    createdAt: new Date().getTime(),
+                    type: 'normal',
+                    loginType: 'google'
+                }
+
+                await addDoc(collection(db, 'users'), user);
+
+                toast.update(toastId, {
+                    render: 'Successfully Added User Profile!',
+                    type: 'success',
+                    autoClose: 2000,
+                })
+
+                // save to local storage
+                localStorage.setItem('email', user.email);
+                localStorage.setItem('name', user.name);
+                localStorage.setItem('uid', user.uid);
+                localStorage.setItem('type',user.type);
+                localStorage.setItem('createdAt', `${user.createdAt}`);
+
+                router.push('/');
+
+                return;
+            }
+            
+            
+            const user = docs[0] as User;
+
+            // save to local storage
+            localStorage.setItem('email', user.email);
+            localStorage.setItem('name', user.name);
+            localStorage.setItem('uid', user.uid);
+            localStorage.setItem('type',user.type);
+            localStorage.setItem('createdAt', `${user.createdAt}`);
+
+            router.push('/');
+            toast.success('Fetched User Doc!');
+
+            return;
         }
         catch(err){
             toast.error(`${err}`);
