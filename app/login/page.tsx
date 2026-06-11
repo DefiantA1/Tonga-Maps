@@ -6,6 +6,7 @@ import { auth, googleProvider } from "../firebase/firebase";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 import { LogoText } from "../components/misc/logotext";
+import { ArrowLeft } from "lucide-react";
 
 export default function LoginPage(){
     const router = useRouter();
@@ -17,6 +18,7 @@ export default function LoginPage(){
     return (
         <div style={{backgroundColor: 'white'}} className="w-screen h-screen flex flex-col justify-center items-center">
             <div className="text-gray-800 px-5">
+                <ArrowLeft className="mb-5 text-gray-700" onClick={() => router.push('/')}/>
                 <div className="flex flex-row items-center justify-center mb-4">
                     <img className="h-14 w-14" src={'/defiant-logo.png'}/>
                 </div>
