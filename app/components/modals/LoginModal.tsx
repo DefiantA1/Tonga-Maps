@@ -7,6 +7,7 @@ import { ShoppingCart, X } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { ChangeEvent, Dispatch, SetStateAction, useState } from "react";
 import { toast } from "react-toastify";
+import { LogoText } from "../misc/logotext";
 
 type LoginModalProps = {
   isOpen: boolean,
@@ -42,10 +43,7 @@ export function LoginModal({isOpen, exit} : LoginModalProps){
                 <p className="text-sm text-gray-500 font-semibold">OR</p>
                 <button onClick={() => goToLoginPage()} className="bg-blue-500 text-white p-2 flex-1 rounded">Sign Up</button>
             </div>
-            <div className="flex flex-row items-center justify-center mt-5">
-                <img src={'/defiant-logo.png'} className="w-12 h-12 text-center"/>
-            </div>
-            <p className="text-sm text-gray-700">Developed & Owned by Defiant Software</p>
+            <LogoText/>
         </div>
         </div>
     );
