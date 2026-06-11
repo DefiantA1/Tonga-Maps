@@ -34,6 +34,8 @@ export default function Home() {
   const [shopModalOpen, setShopModalOpen] = useState(false);
   const [loginModalOpen, setLoginModalOpen] = useState(false);
 
+  const [panToPosition, setPanToPosition] = useState<{lat: number, lng: number} | null>(null);
+
   const [shops, setShops] = useState<Shop[]>([]);
 
   const [mapTypeId, setMapTypeId] = useState<'roadmap' | 'satellite'>('roadmap');
@@ -96,7 +98,7 @@ export default function Home() {
             mapTypeId={mapTypeId}
           >
               <MyMarker/>
-              <PanController target={markerPosition} />
+              <PanController target={panToPosition} />
               {
                 markerPosition != null && <AdvancedMarker position={markerPosition} />
               }
@@ -116,10 +118,10 @@ export default function Home() {
         </APIProvider>
         <div className="absolute top-5 right-2 flex flex-row gap-3 justify-center items-center">
           <Switch value={mapTypeId == 'roadmap'} onChange={() => toggleMap()}/>
-          <p className="bg-gray-600 px-2 py-1 rounded" onClick={() => toggleMap()}>{mapTypeId == 'roadmap' ? 'Road Map' : 'Satellite'}</p>
+          <p className="cursor-pointer bg-gray-600 px-2 py-1 rounded" onClick={() => toggleMap()}>{mapTypeId == 'roadmap' ? 'Road Map' : 'Satellite'}</p>
           {
             <div onClick={() => goToSettingPage()} className="bg-gray-600 p-1 rounded-full">
-              <Settings/>
+              <Settings className="cursor-pointer"/>
             </div>
           }
         </div>
@@ -152,7 +154,10 @@ export default function Home() {
   );
 
   function handleShopTileClick(latLng : {lat: number, lng: number}) {
-    toast.info('To Be Implemented');
+    setPanToPosition({
+      lat: latLng.lat,
+      lng: latLng.lng
+    });
   }
 
   function toggleMap(){
@@ -187,17 +192,22 @@ export default function Home() {
       return;
     }
 
+    setMarkerPosition({
+      lat: latLng.lat,
+      lng: latLng.lng,
+    });
+
+    setPanToPosition({
+      lat: latLng.lat,
+      lng: latLng.lng,
+    });
+
     if(auth.currentUser == null){
       setLoginModalOpen(true);
       return;
     }
 
     setShopModalOpen(true);
-
-    setMarkerPosition({
-      lat: latLng.lat,
-      lng: latLng.lng,
-    });
   }
 }
 
