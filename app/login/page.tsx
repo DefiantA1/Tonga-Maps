@@ -27,7 +27,7 @@ export default function LoginPage(){
                 <p className="text-gray-600 text-sm text-center mb-8">Find Stores in Tonga that accept BSP and ANZ Cards</p>
                 <LoginField title={'Email'} value={email} setValue={setEmail}/>
                 <LoginField title={'Password'} value={password} setValue={setPassword} obscureText={true}/>
-                <button onClick={() => login()} className="mt-4 bg-blue-500 p-3 w-full rounded text-white font-bold">
+                <button onClick={() => login()} className="cursor-pointer mt-4 bg-blue-500 p-3 w-full rounded text-white font-bold">
                     {
                         isLoggingIn 
                             ? <p className="text-center font-bold">Logging In...</p> 
@@ -39,7 +39,7 @@ export default function LoginPage(){
                     <p className="text-sm text-gray-400 font-semibold">OR</p>
                     <hr className="text-gray-300 border flex-1"/>
                 </div>
-                <button onClick={() => authWithGoogle()} className="bg-gray-200 w-full rounded-full mx-auto text-center p-3 px-4 mt-7 flex flex-row items-center justify-between">
+                <button onClick={() => authWithGoogle()} className="cursor-pointer bg-gray-200 w-full rounded-full mx-auto text-center p-3 px-4 mt-7 flex flex-row items-center justify-between">
                     <img src={'/google.png'} className="w-7 h-7"/>
                     <p className="font-semibold">Continue with Google</p>
                     <div className="w-7 h-7"></div>
