@@ -104,7 +104,7 @@ export default function Home() {
             />
             <LoginModal isOpen={loginModalOpen} exit={() => setLoginModalOpen(false)}/>
             {
-              shops.filter((s) => !s.pending).map((s) => (<ShopMarker key={s.id} shop={s}/>))
+              shops.filter((s) => !s.pending || s.uid == localStorage.getItem('uid') || localStorage.getItem('type') == 'super').map((s) => (<ShopMarker key={s.id} shop={s}/>))
             }
         </Map>
       </APIProvider>

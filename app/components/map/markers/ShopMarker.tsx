@@ -1,5 +1,5 @@
 import { AdvancedMarker, InfoWindow } from "@vis.gl/react-google-maps";
-import { CreditCard } from "lucide-react";
+import { CreditCard, Info } from "lucide-react";
 import { useState } from "react";
 import { toast } from "react-toastify";
 import { ImgLoader } from "../../Img/ImgLoader";
@@ -34,6 +34,12 @@ export const ShopMarker = ({shop} : ShopMarkerProps) => {
                     >
                         <h3 className="mb-1 font-semibold text-lg">{shop.name}</h3>
                         <p className="mb-1">Added on {convertToDt(shop.createdAt)}</p>
+                        {
+                            shop.pending == true && <div className="flex flex-row items-center gap-1 text-sm text-orange-400 font-medium mb-3">
+                                <Info/>
+                                <p>Currently In Review</p>
+                            </div>
+                        }
                         {
                             shop.imgUrl != null && 
                                 <img

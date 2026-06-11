@@ -33,7 +33,7 @@ export default function SignUpPage(){
                 <SignUpField title={'Email'} value={email} setValue={setEmail}/>
                 <SignUpField title={'Password'} value={password} setValue={setPassword} obscureText={true}/>
                 <SignUpField title={'Confirm Password'} value={confirmPassword} setValue={setConfirmPassword} obscureText={true}/>
-                <button onClick={() => signUpUser()} className="mt-4 bg-blue-500 p-3 w-full rounded text-white font-bold">
+                <button onClick={() => signUpUser()} className="mt-4 bg-blue-500 p-3 w-full rounded text-white font-bold cursor-pointer">
                     {
                         isSigningUp 
                             ? <p className="text-center font-bold">Signing Up...</p> 
@@ -60,7 +60,12 @@ export default function SignUpPage(){
 
     async function signUpUser(){
         try{
+            if(isSigningUp){
+                return;
+            }
+
             setIsSigningUp(true);
+
             if(firstName == ''){
                 throw Error('Please provide first name.');
             }
@@ -106,15 +111,17 @@ export default function SignUpPage(){
 
             const user : User = {
                 email: email,
-                name: `${firstName} ${lastName}`,
+                name: `${firstName.trim()} ${lastName.trim()}`,
                 createdAt: new Date().getTime(),
-                uid: result.user.uid
+                uid: result.user.uid,
+                type: 'normal'
             };
 
             // save to local storage
             localStorage.setItem('email', user.email);
             localStorage.setItem('name', user.name);
             localStorage.setItem('uid', user.uid);
+            localStorage.setItem('type',user.type);
 
             // save to db
             const userRef = collection(db, 'users');

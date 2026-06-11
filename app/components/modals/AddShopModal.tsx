@@ -103,13 +103,23 @@ export function AddShopModal({isOpen, exit, markerPosition} : AddShopModalProps)
         throw new Error('Shop location not found');
       }
 
+
+      const uid = localStorage.getItem('uid');
+
+      if(uid == null){
+        throw new Error('uid for user not found');
+      }
+
       const newShop : Shop = {
         name: name,
         acceptsANZ: acceptsANZ,
         acceptsBSP: acceptsBSP,
-        createdAt: new Date().getTime(),
         lat: markerPosition.lat,
         lng: markerPosition.lng,
+        uid: uid,
+
+        // defaults
+        createdAt: new Date().getTime(),
         pending: true,
       };
 
@@ -124,9 +134,7 @@ export function AddShopModal({isOpen, exit, markerPosition} : AddShopModalProps)
         const fileName = `${name.replaceAll(" ", "")}-${new Date().getTime()}`;
         const storageRef = ref(storage, `markers/${fileName}`)
 
-        // show "updating img" in button
         await uploadBytes(storageRef, imgFile);
-        // show "completed"
 
         imgUrl = await getDownloadURL(storageRef);
         newShop.imgUrl = imgUrl;
