@@ -122,6 +122,7 @@ export default function SignUpPage(){
             localStorage.setItem('name', user.name);
             localStorage.setItem('uid', user.uid);
             localStorage.setItem('type',user.type);
+            localStorage.setItem('createdAt', `${user.createdAt}`);
 
             // save to db
             const userRef = collection(db, 'users');
