@@ -119,7 +119,14 @@ export default function Home() {
                     key={s.id} 
                     shop={s} 
                     active={s.id == selectedShop?.id}
-                    onSelect={() => setSelectedShop(s)}
+                    onSelect={() => {
+                      if(s.id == selectedShop?.id){
+                        setSelectedShop(null);
+                        return;
+                      }
+
+                      setSelectedShop(s);
+                    }}
                   />
                 ))
               }

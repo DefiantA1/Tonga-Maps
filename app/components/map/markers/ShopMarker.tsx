@@ -21,13 +21,13 @@ export const ShopMarker = ({shop, active, onSelect} : ShopMarkerProps) => {
                 <img
                     src={shop.imgUrl}
                     alt={shop.name}
-                    className="w-12 h-12 rounded-full border-2 bg-blue-400 border-blue shadow-lg"
+                    className={`${active ? 'w-20 h-20' : 'w-12 h-12'} rounded-full border-2 bg-blue-400 border-blue shadow-lg`}
                 />
             </AdvancedMarker>
             {
                 active && <InfoWindow
                         position={{
-                            lat: shop.lat + 0.00005,
+                            lat: shop.lat + 0.0004,
                             lng: shop.lng,
                         }}
                         onClose={() => onSelect()}
