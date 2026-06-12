@@ -42,6 +42,8 @@ export default function Home() {
 
   const router = useRouter();
 
+  const [selectedShopTile, setSelectedShopTile] = useState<null | Shop> (null);
+
 
   useEffect(() => {
       const unsubscribe = onSnapshot(
@@ -133,14 +135,24 @@ export default function Home() {
               <hr className="border border-gray-400 my-3"/>
               <ul>
                 {shops.length != 0 && shops.sort((a,b) => a.name.localeCompare(b.name)).map((s) => 
-                  <li className="cursor-pointer" key={s.id} onClick={() => {handleShopTileClick({lat: s.lat, lng: s.lng})}}>
-                    <div className="flex flex-row gap-4 my-3 items-center">
+                  <li className={`cursor-pointer`} key={s.id} onClick={() => {handleShopTileClick(s)}}>
+                    <div className={`flex flex-row gap-4 my-3 items-center p-2 ${selectedShopTile == s ? 'border border-green-400 bg-green-200 rounded' : ''}`}>
                       <div className="relative h-8 w-8 flex flex-row">
-                        <div className="absolute rounded p-1 opacity-5 h-9 w-9" style={{backgroundColor: '#0F172A'}}>
+                        <div className={`absolute rounded p-1 ${selectedShopTile == s ? 'opacity-100' : 'opacity-5'} h-9 w-9`} style={{backgroundColor: selectedShopTile == s ? '#1ead2a' : '#0F172A'}}>
                         </div>
-                        <ShoppingCart style={{color: '#64748B'}} className="cursor-pointer absolute text-black top-2 left-2" size={"20"}/>
+                        <ShoppingCart style={{color: selectedShopTile == s ? 'white' : '#64748B'}} className="cursor-pointer absolute text-black top-2 left-2" size={"20"}/>
                       </div>
-                      <p className="cursor-pointer" style={{color: '#334155'}}>{s.name}</p>
+                      <div>
+                        <p className="cursor-pointer" style={{color: '#334155'}}>{s.name}</p>
+                        <div className="flex flex-row items-center gap-1">
+                          {
+                            s.acceptsBSP == true ? <img src={'/BSP.png'} className="w-5 h-5 rounded"/> : <></>
+                          }
+                          {
+                            s.acceptsANZ == true ? <img src={'/ANZ.png'} className="w-5 h-5 rounded"/> : <></>
+                          }
+                        </div>
+                      </div>
                     </div>
                   </li>
                 )}
@@ -153,11 +165,13 @@ export default function Home() {
     </div>
   );
 
-  function handleShopTileClick(latLng : {lat: number, lng: number}) {
+  function handleShopTileClick(shop: Shop) {
     setPanToPosition({
-      lat: latLng.lat,
-      lng: latLng.lng
+      lat: shop.lat,
+      lng: shop.lng
     });
+
+    setSelectedShopTile(shop);
   }
 
   function toggleMap(){
