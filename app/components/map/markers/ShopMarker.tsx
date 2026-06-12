@@ -1,21 +1,22 @@
 import { AdvancedMarker, InfoWindow } from "@vis.gl/react-google-maps";
 import { CreditCard, Info } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { ImgLoader } from "../../Img/ImgLoader";
 
 type ShopMarkerProps = {
-    shop: Shop
+    shop: Shop,
+    active: boolean,
+    onSelect: () => void
 }
 
-export const ShopMarker = ({shop} : ShopMarkerProps) => {
-    const [showInfoWindow, setShowInfoWindow] = useState(false);
+export const ShopMarker = ({shop, active, onSelect} : ShopMarkerProps) => {
     
     return (
         <div>
             <AdvancedMarker 
                 position={{lat: shop.lat, lng: shop.lng}}
-                onClick={() => setShowInfoWindow(true)}
+                onClick={() => onSelect()}
             >
                 <img
                     src={shop.imgUrl}
@@ -24,12 +25,12 @@ export const ShopMarker = ({shop} : ShopMarkerProps) => {
                 />
             </AdvancedMarker>
             {
-                showInfoWindow && <InfoWindow
+                active && <InfoWindow
                         position={{
                             lat: shop.lat + 0.00005,
                             lng: shop.lng,
                         }}
-                        onClose={() => setShowInfoWindow(false)}
+                        onClose={() => onSelect()}
                         className="text-black my-0 py-0"
                     >
                         <h3 className="mb-1 font-semibold text-lg">{shop.name}</h3>
