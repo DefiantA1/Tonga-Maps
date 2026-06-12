@@ -125,7 +125,8 @@ export default function Home() {
                         return;
                       }
 
-                      setSelectedShop(s);
+                      handleShopTileClick(s);
+
                     }}
                   />
                 ))
