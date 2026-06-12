@@ -81,7 +81,7 @@ export default function Home() {
 
 
   return (      
-    <div className="bg-blue-300 h-screen">
+    <div className="bg-gray-800 h-screen">
       <div className="relative w-full h-full">
         <APIProvider apiKey={process.env.NEXT_PUBLIC_GOOGLE_MAP_API_KEY!}>
           <Map
@@ -148,6 +148,9 @@ export default function Home() {
               <h2 style={{color: '#0F172A'}} className="text-xl font-semibold">Tonga Maps</h2>
               <p className="text-sm" style={{color: '#64748B'}}>Shops That Accept Card Payments</p>
               <hr className="border border-gray-400 my-3"/>
+              {
+                shops.length > 0 && <p className="text-sm" style={{color: '#64748B'}}>{shops.length} Shops</p>
+              }
               <ul>
                 {shops.length != 0 && shops.sort((a,b) => a.name.localeCompare(b.name)).map((s) => 
                   <li className={`cursor-pointer`} key={s.id} onClick={() => {handleShopTileClick(s)}}>
