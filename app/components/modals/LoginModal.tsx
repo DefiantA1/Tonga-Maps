@@ -1,12 +1,7 @@
 'use client'
 
-import { auth, db, storage } from "@/app/firebase/firebase";
-import { addDoc, collection } from "firebase/firestore";
-import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
-import { ShoppingCart, X } from "lucide-react";
+import { X } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { ChangeEvent, Dispatch, SetStateAction, useState } from "react";
-import { toast } from "react-toastify";
 import { LogoText } from "../misc/logotext";
 
 type LoginModalProps = {
