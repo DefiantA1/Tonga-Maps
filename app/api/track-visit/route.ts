@@ -4,12 +4,14 @@ import { headers } from "next/headers";
 
 export async function POST(req: Request) {
     const ip = await getIpAddress();
+    const deviceType = await getDeviceType();
 
     const ms : number = new Date().getTime();
     
     const docRef = collection(db, 'visits');
     await addDoc(docRef, {
         ip: ip,
+        deviceType: deviceType,
         dt: Timestamp.fromMillis(ms)
     })
     
@@ -31,4 +33,16 @@ async function getIpAddress() : Promise<string> {
         "unknown";
 
     return ip;
+}
+
+
+async function getDeviceType() : Promise<string> {
+    const userAgent = (await headers()).get("user-agent") || "";
+
+    const isMobile =
+        /Android|iPhone|iPad|iPod|Mobile/i.test(userAgent);
+    
+    const deviceType : string = isMobile ? "mobile" : "desktop";
+
+    return deviceType;
 }
