@@ -10,7 +10,7 @@ import { auth, db } from "./firebase/firebase";
 import { ShopMarker } from "./components/map/markers/ShopMarker";
 import Switch from "./components/misc/switch";
 import { LoginModal } from "./components/modals/LoginModal";
-import { House, Settings, ShoppingCart } from "lucide-react";
+import { House, Search, Settings, ShoppingCart, X } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 
@@ -43,6 +43,7 @@ export default function Home() {
   const router = useRouter();
 
   const [selectedShop, setSelectedShop] = useState<null | Shop> (null);
+  const [search, setSearch] = useState<string>('');
 
 
   useEffect(() => {
@@ -114,7 +115,7 @@ export default function Home() {
               />
               <LoginModal isOpen={loginModalOpen} exit={() => setLoginModalOpen(false)}/>
               {
-                shops.filter((s) => !s.pending || s.uid == localStorage.getItem('uid') || localStorage.getItem('type') == 'super').map((s) => (
+                shops.filter((s) => (!s.pending || s.uid == localStorage.getItem('uid') || localStorage.getItem('type') == 'super')).map((s) => (
                   <ShopMarker 
                     key={s.id} 
                     shop={s} 
@@ -149,10 +150,21 @@ export default function Home() {
               <p className="text-sm" style={{color: '#64748B'}}>Shops That Accept Card Payments</p>
               <hr className="border border-gray-400 my-3"/>
               {
+                <div className="border rounded border-gray-400 border-1 p-1 mb-3">
+                  <div className="flex flex-row items-center gap-2">
+                    <Search className="text-gray-500 cursor-pointer"/>
+                    <input value={search} onChange={(e) => setSearch(e.target.value)} className="w-full p-1 text-gray-800 focus:outline-none"/>
+                    {
+                      search != '' && <X onClick={() => setSearch("")} className="text-gray-500 cursor-pointer"/>
+                    }
+                  </div>
+                </div>
+              }
+              {
                 shops.length > 0 && <p className="text-sm" style={{color: '#64748B'}}>{shops.length} Shops</p>
               }
               <ul>
-                {shops.length != 0 && shops.sort((a,b) => a.name.localeCompare(b.name)).map((s) => 
+                {shops.length != 0 && shops.filter((s) => s.name.toLowerCase().includes(search.toLowerCase().trim())).sort((a,b) => a.name.localeCompare(b.name)).map((s) => 
                   <li className={`cursor-pointer`} key={s.id} onClick={() => {handleShopTileClick(s)}}>
                     <div className={`flex flex-row gap-4 my-3 items-center p-2 ${selectedShop == s ? 'border border-green-400 bg-green-200 rounded' : ''}`}>
                       <div className="relative h-8 w-8 flex flex-row">
