@@ -35,8 +35,11 @@ const SettingsPage = () => {
     
     return (
         <div className="bg-white w-screen h-screen p-5 text-gray-700">
-            <ArrowLeft className="cursor-pointer" onClick={() => router.push('/')}/>
-            <div className="mt-5">
+            <div className="flex flex-row items-center gap-3">
+                <ArrowLeft className="cursor-pointer" onClick={() => returnHome()}/>
+                <p className="cursor-pointer" onClick={() => returnHome()}>Return To Home</p>
+            </div>
+            <div className="mt-5 px-3">
                 <h2 className="text-2xl">Settings Page</h2>
                 {
                     user != null && <p className="text-black">Hi {user.name}!</p>
@@ -45,6 +48,11 @@ const SettingsPage = () => {
             </div>
         </div>
     );
+
+    function returnHome(){
+        router.push('/');
+        return;
+    }
 
 
     async function logOut(){
