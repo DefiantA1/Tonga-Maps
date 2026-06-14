@@ -78,7 +78,7 @@ export default function Home() {
       );
 
       return unsubscribe;
-  }, [])
+    }, [])
 
 
   return (      
@@ -161,7 +161,10 @@ export default function Home() {
                 </div>
               }
               {
-                shops.length > 0 && <p className="text-sm" style={{color: '#64748B'}}>{shops.length} Shops</p>
+                shops.length > 0 && <p className="text-sm text-gray-500" style={{color: '#64748B'}}>{shops.length} Shops</p>
+              }
+              {
+                shops.length == 0 && <p className="text-gray-500">Loading Shops...</p>
               }
               <ul>
                 {shops.length != 0 && shops.filter((s) => s.name.toLowerCase().includes(search.toLowerCase().trim())).sort((a,b) => a.name.localeCompare(b.name)).map((s) => 
