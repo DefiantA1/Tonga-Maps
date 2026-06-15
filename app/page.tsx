@@ -21,7 +21,7 @@ export const containerStyle = {
     borderRadius: '15px 0px 0px 15px',
 };
 
-const zoom = 18
+const zoom = 15
 
 const nukualofa = {
   lat: -21.1394,
