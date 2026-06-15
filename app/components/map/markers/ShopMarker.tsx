@@ -86,7 +86,7 @@ function convertToDt(ms: number){
     const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
     const dayIndex = dt.getDay();
-    const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+    const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
 
     return `${days[dayIndex]}, ${dt.getDate()} ${months[monthIndex]} ${dt.getFullYear()}`;
