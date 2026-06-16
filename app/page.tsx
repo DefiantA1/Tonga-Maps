@@ -134,69 +134,81 @@ export default function Home() {
               }
           </Map>
         </APIProvider>
-        <div className="absolute top-5 right-2 flex flex-row gap-3 justify-center items-center">
-          <Switch value={mapTypeId == 'roadmap'} onChange={() => toggleMap()}/>
-          <p className="cursor-pointer bg-gray-600 px-2 py-1 rounded" onClick={() => toggleMap()}>{mapTypeId == 'roadmap' ? 'Road Map' : 'Satellite'}</p>
-          {
-            <div onClick={() => goToSettingPage()} className="bg-gray-600 p-1 rounded-full">
-              <Settings className="cursor-pointer"/>
-            </div>
-          }
-        </div>
-        <div className="absolute top-4 left-4">
-          <div className="flex flex-row gap-4">
-            <div style={{backgroundColor: '#F8FAFD'}} className="w-80 border border-white opacity-90 h-185 p-5 hidden lg:block rounded-xl overflow-y-auto">
-              <h2 style={{color: '#0F172A'}} className="text-xl font-semibold">Tonga Maps</h2>
-              <p className="text-sm" style={{color: '#64748B'}}>Shops That Accept Card Payments</p>
-              <hr className="border border-gray-400 my-3"/>
-              {
-                <div className="border rounded border-gray-400 border-1 p-1 mb-3">
-                  <div className="flex flex-row items-center gap-2">
-                    <Search className="text-gray-500 cursor-pointer"/>
-                    <input value={search} onChange={(e) => setSearch(e.target.value)} className="w-full p-1 text-gray-800 focus:outline-none"/>
-                    {
-                      search != '' && <X onClick={() => setSearch("")} className="text-gray-500 cursor-pointer"/>
-                    }
-                  </div>
-                </div>
-              }
-              {
-                shops.length > 0 && <p className="text-sm text-gray-500" style={{color: '#64748B'}}>{shops.length} Shops</p>
-              }
-              {
-                shops.length == 0 && <p className="text-gray-500">Loading Shops...</p>
-              }
-              <ul>
-                {shops.length != 0 && shops.filter((s) => s.name.toLowerCase().includes(search.toLowerCase().trim())).sort((a,b) => a.name.localeCompare(b.name)).map((s) => 
-                  <li className={`cursor-pointer`} key={s.id} onClick={() => {handleShopTileClick(s)}}>
-                    <div className={`flex flex-row gap-4 my-3 items-center p-2 ${selectedShop == s ? 'border border-green-400 bg-green-200 rounded' : ''}`}>
-                      <div className="relative h-8 w-8 flex flex-row">
-                        <div className={`absolute rounded p-1 ${selectedShop == s ? 'opacity-100' : 'opacity-5'} h-9 w-9`} style={{backgroundColor: selectedShop == s ? '#1ead2a' : '#0F172A'}}>
-                        </div>
-                        <ShoppingCart style={{color: selectedShop == s ? 'white' : '#64748B'}} className="cursor-pointer absolute text-black top-2 left-2" size={"20"}/>
-                      </div>
-                      <div>
-                        <p className="cursor-pointer" style={{color: '#334155'}}>{s.name}</p>
-                        <div className="flex flex-row items-center gap-1">
-                          {
-                            s.acceptsBSP == true ? <img src={'/BSP.png'} className="w-5 h-5 rounded"/> : <></>
-                          }
-                          {
-                            s.acceptsANZ == true ? <img src={'/ANZ.png'} className="w-5 h-5 rounded"/> : <></>
-                          }
-                        </div>
-                      </div>
-                    </div>
-                  </li>
-                )}
-              </ul>
-            </div>
-            <img src={'/defiant-logo.png'} className="h-12 w-12"/>
-          </div>
-        </div>
+        <SettingActionButtons/>
+        <Sidebar/>
       </div>
     </div>
   );
+
+  function SettingActionButtons(){
+    return (
+      <div className="absolute top-5 right-2 flex flex-row gap-3 justify-center items-center">
+        <Switch value={mapTypeId == 'roadmap'} onChange={() => toggleMap()}/>
+        <p className="cursor-pointer bg-gray-600 px-2 py-1 rounded" onClick={() => toggleMap()}>{mapTypeId == 'roadmap' ? 'Road Map' : 'Satellite'}</p>
+        {
+          <div onClick={() => goToSettingPage()} className="bg-gray-600 p-1 rounded-full">
+            <Settings className="cursor-pointer"/>
+          </div>
+        }
+      </div>
+    );
+  }
+
+  function Sidebar(){
+    return (
+      <div className="absolute top-4 left-4">
+        <div className="flex flex-row gap-4">
+          <div style={{backgroundColor: '#F8FAFD'}} className="w-80 border border-white opacity-90 h-185 p-5 hidden lg:block rounded-xl overflow-y-auto">
+            <h2 style={{color: '#0F172A'}} className="text-xl font-semibold">Tonga Maps</h2>
+            <p className="text-sm" style={{color: '#64748B'}}>Shops That Accept Card Payments</p>
+            <hr className="border border-gray-400 my-3"/>
+            {
+              <div className="border rounded border-gray-400 border-1 p-1 mb-3">
+                <div className="flex flex-row items-center gap-2">
+                  <Search className="text-gray-500 cursor-pointer"/>
+                  <input value={search} onChange={(e) => setSearch(e.target.value)} className="w-full p-1 text-gray-800 focus:outline-none"/>
+                  {
+                    search != '' && <X onClick={() => setSearch("")} className="text-gray-500 cursor-pointer"/>
+                  }
+                </div>
+              </div>
+            }
+            {
+              shops.length > 0 && <p className="text-sm text-gray-500" style={{color: '#64748B'}}>{shops.length} Shops</p>
+            }
+            {
+              shops.length == 0 && <p className="text-gray-500">Loading Shops...</p>
+            }
+            <ul>
+              {shops.length != 0 && shops.filter((s) => s.name.toLowerCase().includes(search.toLowerCase().trim())).sort((a,b) => a.name.localeCompare(b.name)).map((s) => 
+                <li className={`cursor-pointer`} key={s.id} onClick={() => {handleShopTileClick(s)}}>
+                  <div className={`flex flex-row gap-4 my-3 items-center p-2 ${selectedShop == s ? 'border border-green-400 bg-green-200 rounded' : ''}`}>
+                    <div className="relative h-8 w-8 flex flex-row">
+                      <div className={`absolute rounded p-1 ${selectedShop == s ? 'opacity-100' : 'opacity-5'} h-9 w-9`} style={{backgroundColor: selectedShop == s ? '#1ead2a' : '#0F172A'}}>
+                      </div>
+                      <ShoppingCart style={{color: selectedShop == s ? 'white' : '#64748B'}} className="cursor-pointer absolute text-black top-2 left-2" size={"20"}/>
+                    </div>
+                    <div>
+                      <p className="cursor-pointer" style={{color: '#334155'}}>{s.name}</p>
+                      <div className="flex flex-row items-center gap-1">
+                        {
+                          s.acceptsBSP == true ? <img src={'/BSP.png'} className="w-5 h-5 rounded"/> : <></>
+                        }
+                        {
+                          s.acceptsANZ == true ? <img src={'/ANZ.png'} className="w-5 h-5 rounded"/> : <></>
+                        }
+                      </div>
+                    </div>
+                  </div>
+                </li>
+              )}
+            </ul>
+          </div>
+          <img src={'/defiant-logo.png'} className="h-12 w-12"/>
+        </div>
+      </div>
+    );
+  }
 
   function handleShopTileClick(shop: Shop) {
     setPanToPosition({
