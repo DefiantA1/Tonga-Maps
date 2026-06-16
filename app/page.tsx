@@ -107,31 +107,11 @@ export default function Home() {
               }
               <AddShopModal 
                   isOpen={shopModalOpen} 
-                  exit={() => {
-                    setShopModalOpen(false);
-                    setMarkerPosition(null);
-                  }}
+                  exit={() => closeAddShopModal()}
                   markerPosition={markerPosition}
               />
               <LoginModal isOpen={loginModalOpen} exit={() => setLoginModalOpen(false)}/>
-              {
-                shops.filter((s) => (!s.pending || s.uid == localStorage.getItem('uid') || localStorage.getItem('type') == 'super')).map((s) => (
-                  <ShopMarker 
-                    key={s.id} 
-                    shop={s} 
-                    active={s.id == selectedShop?.id}
-                    onSelect={() => {
-                      if(s.id == selectedShop?.id){
-                        setSelectedShop(null);
-                        return;
-                      }
-
-                      handleShopTileClick(s);
-
-                    }}
-                  />
-                ))
-              }
+              <ShopMarkers shops={shops} hide={false}/>
           </Map>
         </APIProvider>
         <SettingActionButtons/>
@@ -208,6 +188,44 @@ export default function Home() {
         </div>
       </div>
     );
+  }
+
+
+  type ShopMarkersProps = {
+    shops: Shop[],
+    hide: boolean
+  }
+
+  function ShopMarkers({shops, hide = false} : ShopMarkersProps){
+    if(hide){
+      return (
+        <div></div>
+      );
+    }
+    
+    return (
+      shops.filter((s) => (!s.pending || s.uid == localStorage.getItem('uid') || localStorage.getItem('type') == 'super')).map((s) => (
+        <ShopMarker 
+          key={s.id} 
+          shop={s} 
+          active={s.id == selectedShop?.id}
+          onSelect={() => {
+            if(s.id == selectedShop?.id){
+              setSelectedShop(null);
+              return;
+            }
+
+            handleShopTileClick(s);
+
+          }}
+        />
+      ))
+    );
+  }
+
+  function closeAddShopModal(){
+    setShopModalOpen(false);
+    setMarkerPosition(null);
   }
 
   function handleShopTileClick(shop: Shop) {

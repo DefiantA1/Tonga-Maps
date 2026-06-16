@@ -19,9 +19,7 @@ export function AddShopModal({isOpen, exit, markerPosition} : AddShopModalProps)
   const [acceptsANZ, setAcceptsANZ] = useState<boolean>(false);
 
   const [imgFile, setImgFile] = useState<File | null>();
-
   const [loading, setLoading] = useState<boolean>(false);
-
   const [comment, setComment] = useState<string>("");
   
   function exitModal(){
