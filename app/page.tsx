@@ -274,7 +274,7 @@ export default function Home() {
       return;
     }
 
-    toast.info(`lat:${latLng.lat}, lng:${latLng.lng}`);
+    // toast.info(`lat:${latLng.lat}, lng:${latLng.lng}`);
 
     setMarkerPosition({
       lat: latLng.lat,
