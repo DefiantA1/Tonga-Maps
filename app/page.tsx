@@ -100,22 +100,27 @@ export default function Home() {
             disableDefaultUI={true}
             mapTypeId={mapTypeId}
           >
-              <MyMarker/>
-              <PanController target={panToPosition} />
+              {/* <MyMarker/>
+              <PanController target={panToPosition} /> */}
               {
                 markerPosition != null && <AdvancedMarker position={markerPosition} />
               }
-              <AddShopModal 
+              {/* <AddShopModal 
                   isOpen={shopModalOpen} 
                   exit={() => closeAddShopModal()}
                   markerPosition={markerPosition}
               />
               <LoginModal isOpen={loginModalOpen} exit={() => setLoginModalOpen(false)}/>
-              <ShopMarkers shops={shops} hide={false}/>
+              <ShopMarkers shops={shops} hide={false}/> */}
+              {/* <AddShopModal 
+                  isOpen={shopModalOpen} 
+                  exit={() => closeAddShopModal()}
+                  markerPosition={markerPosition}
+              /> */}
           </Map>
         </APIProvider>
-        <SettingActionButtons/>
-        <Sidebar/>
+        {/* <SettingActionButtons/>
+        <Sidebar/> */}
       </div>
     </div>
   );
@@ -268,6 +273,8 @@ export default function Home() {
     if(latLng == null){
       return;
     }
+
+    toast.info(`lat:${latLng.lat}, lng:${latLng.lng}`);
 
     setMarkerPosition({
       lat: latLng.lat,
