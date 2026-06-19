@@ -1,5 +1,5 @@
 import { AdvancedMarker, InfoWindow } from "@vis.gl/react-google-maps";
-import { CreditCard, Info } from "lucide-react";
+import { CreditCard, Info, ShoppingBag } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { ImgLoader } from "../../Img/ImgLoader";
@@ -18,11 +18,19 @@ export const ShopMarker = ({shop, active, onSelect} : ShopMarkerProps) => {
                 position={{lat: shop.lat, lng: shop.lng}}
                 onClick={() => onSelect()}
             >
-                <img
-                    src={shop.imgUrl}
-                    alt={shop.name}
-                    className={`${active ? 'w-20 h-20' : 'w-12 h-12'} rounded-full border-2 bg-blue-400 border-blue shadow-lg`}
-                />
+                {
+                    shop.imgUrl != undefined && shop.imgUrl != null &&
+                        <img
+                            src={shop.imgUrl}
+                            alt={shop.name}
+                            className={`${active ? 'w-20 h-20' : 'w-12 h-12'} rounded-full border-2 bg-blue-400 border-blue shadow-lg`}
+                        />
+                }
+                {
+                    (shop.imgUrl == undefined || shop.imgUrl == null) && <div className="bg-white p-3 rounded-full text-blue-600">
+                        <ShoppingBag/>
+                    </div>
+                }
             </AdvancedMarker>
             {
                 active && <InfoWindow
@@ -42,7 +50,7 @@ export const ShopMarker = ({shop, active, onSelect} : ShopMarkerProps) => {
                             </div>
                         }
                         {
-                            shop.imgUrl != null && 
+                            shop.imgUrl != undefined && shop.imgUrl != null && 
                                 <img
                                     src={shop.imgUrl}
                                     alt={shop.name}
