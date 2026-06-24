@@ -1,6 +1,6 @@
 'use client'
 
-import { AdvancedMarker, APIProvider, Map, MapMouseEvent, useMap} from "@vis.gl/react-google-maps";
+import { AdvancedMarker, APIProvider, Map, MapMouseEvent} from "@vis.gl/react-google-maps";
 import { useEffect, useRef, useState } from "react";
 import { PanController } from "./components/map/PanController";
 import { MyMarker } from "./components/map/MyMarker";
@@ -10,10 +10,8 @@ import { auth, db } from "./firebase/firebase";
 import { ShopMarker } from "./components/map/markers/ShopMarker";
 import Switch from "./components/misc/switch";
 import { LoginModal } from "./components/modals/LoginModal";
-import { House, Search, Settings, ShoppingCart, X } from "lucide-react";
+import { Search, Settings, ShoppingCart, X } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { toast } from "react-toastify";
-
 
 export const containerStyle = {
     width: '100%',
