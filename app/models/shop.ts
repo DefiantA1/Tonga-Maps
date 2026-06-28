@@ -1,13 +1,14 @@
 type Shop = {
-    name: string,
+    name: string | null,
     imgUrl?: string,
-    acceptsBSP: boolean,
-    acceptsANZ: boolean,
+    acceptsBSP: boolean | null,
+    acceptsANZ: boolean | null,
     createdAt: number,
     uid: string,
     lat: number,
     lng: number,
     pending: boolean,
     id?: string,
-    comment?: string | null
+    comment?: string | null,
+    type: string
 }

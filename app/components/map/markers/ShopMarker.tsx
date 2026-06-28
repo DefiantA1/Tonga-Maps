@@ -22,7 +22,7 @@ export const ShopMarker = ({shop, active, onSelect} : ShopMarkerProps) => {
                     shop.imgUrl != undefined && shop.imgUrl != null &&
                         <img
                             src={shop.imgUrl}
-                            alt={shop.name}
+                            alt={shop.name == null ? shop.type : shop.name}
                             className={`${active ? 'w-20 h-20' : 'w-12 h-12'} rounded-full border-2 bg-blue-400 border-blue shadow-lg`}
                         />
                 }
@@ -53,12 +53,14 @@ export const ShopMarker = ({shop, active, onSelect} : ShopMarkerProps) => {
                             shop.imgUrl != undefined && shop.imgUrl != null && 
                                 <img
                                     src={shop.imgUrl}
-                                    alt={shop.name}
+                                    alt={shop.name == null ? shop.type : shop.name}
                                     className="w-50 rounded border border-gray-400"
                                 />
                         }
                         <div className="mt-3">
-                            <p className="mb-1 text-gray-800">Cards Accepted Here</p>
+                            {
+                                (shop.acceptsANZ == false && shop.acceptsBSP == false) || (shop.acceptsANZ == null && shop.acceptsBSP == null) && <p className="mb-1 text-gray-800">Cards Accepted Here</p>
+                            }
                             <div className="flex flex-row gap-2">
                                 {
                                     shop.acceptsBSP && <img 

@@ -1,11 +1,13 @@
 'use client'
 
-import { auth, db, storage } from "@/app/firebase/firebase";
-import { addDoc, collection } from "firebase/firestore";
-import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
-import { ShoppingCart, X } from "lucide-react";
-import { ChangeEvent, Dispatch, SetStateAction, useEffect, useState } from "react";
+import { db, storage } from "@/app/firebase/firebase";
+import { addDoc, collection, doc, getDocs, query, updateDoc } from "firebase/firestore";
+import { getDownloadURL, uploadBytes, ref } from "firebase/storage";
+import { LocationEditIcon, X } from "lucide-react";
+import { ChangeEvent, Dispatch, SetStateAction, useState } from "react";
 import { toast } from "react-toastify";
+
+import { MarkerTypeRadio } from "../radio/MarkerTypeRadio";
 
 type AddShopModalProps = {
   isOpen: boolean,
@@ -21,6 +23,8 @@ export function AddShopModal({isOpen, exit, markerPosition} : AddShopModalProps)
   const [imgFile, setImgFile] = useState<File | null>();
   const [loading, setLoading] = useState<boolean>(false);
   const [comment, setComment] = useState<string>("");
+
+  const [markerType, setMarkerType] = useState<string>("");
   
   function exitModal(){
     setName("");
@@ -53,59 +57,98 @@ export function AddShopModal({isOpen, exit, markerPosition} : AddShopModalProps)
       >
         <div className="flex flex-row justify-between">
           <div className="flex flex-row">
-            <h2 className="mr-3" style={{fontWeight: 'bold'}}>Add a Shop</h2>
-            <ShoppingCart/>
+            <h2 className="mr-3" style={{fontWeight: 'bold'}}>Add a Marker</h2>
+            <LocationEditIcon/>
           </div>
           <X className="cursor-pointer" onClick={() => exitModal()}/>
         </div>
         <hr className="mt-2 mb-4"/>
-        <Field title={"Shop Name"} value={name} setValue={setName}/>
-        <ImgField onFileChange={(f: File | null) => setImgFile(f)}/>
-        <CardBoxes
-          anz={acceptsANZ}
-          bsp={acceptsBSP}
-          onANZChange={(v) => setAcceptsANZ(v)} 
-          onBSPChange={(v) => setAcceptsBSP(v)}
+        <MarkerTypeRadio 
+          markerType={markerType} 
+          setMarkerType={setMarkerType}
         />
-        <div className="mt-3">
-          <Field title={'Comment (Optional)'} setValue={setComment} value={comment}/>
-        </div>
-        <AddBtn/>
+        {
+          markerType.toLowerCase().includes('shop') && <ShopQuestions name={name} setName={setName} acceptsANZ={acceptsANZ} setAcceptsANZ={setAcceptsANZ} acceptsBSP={acceptsBSP} setAcceptsBSP={setAcceptsBSP} comment={comment} setComment={setComment} setImgFile={setImgFile} />
+        }
+        {
+          markerType.toLowerCase().includes('bus') && <BusQuestions name={name} setName={setName} setImgFile={setImgFile} />
+        }
+        {
+          markerType.toLowerCase().includes('pot') && <PotHoleQuestions name={name} setName={setName} setImgFile={setImgFile} comment={comment} setComment={setComment} />
+        }
+        {
+          markerType.toLowerCase().includes('atm') && <ATMQuestions name={name} setName={setName} setImgFile={setImgFile} comment={comment} setComment={setComment} />
+        }
+        {
+          markerType.toLowerCase().includes('tsunami') && <TsunamiEvacuationQuestions name={name} setName={setName} setImgFile={setImgFile} comment={comment} setComment={setComment} />
+        }
+        <AddBtn />
       </div>
     </div>
   );
 
+
   function AddBtn(){
     return (
-      <div onClick={handleAddShop} className="cursor-pointer bg-green-500 w-full p-3 mt-4 rounded text-white font-semibold text-center">
+      <div 
+        onClick={() => {handleAddMarker()}} 
+        className="cursor-pointer bg-green-500 w-full p-3 mt-4 rounded text-white font-semibold text-center">
         {loading 
           ? <div className="flex flex-row items-center justify-center">
               <Spinner size="sm"/>
               <p className="ml-2">Loading...</p>
             </div> 
-          : <p>Add Shop</p>}
+          : <p>Add {markerType}</p>}
       </div>
     );
   }
 
-  async function handleAddShop(){
+  function validateForm() : string | null{
+    if(markerPosition == null){
+      return 'Location not found';
+    }
+
+    if(name == ''){
+      return `Please Provide Name of ${markerType}`;
+    }
+
+    if(imgFile == null){
+      return 'Please Provide a Photo';
+    }
+
+    if(markerType.toLowerCase().includes('shop')){
+      
+
+      if(acceptsANZ == false && acceptsBSP == false){
+        return 'Which card does this shop provide?';
+      }
+    }
+
+    if(markerType.toLowerCase().includes('bus')){
+      if(name == ''){
+        return 'Please Provide Name of Bus Stop';
+      }
+    }
+
+    if(markerType.toLowerCase().includes('tsunami')){
+      if(name == ''){
+        return 'Please Provide Tsunami Evacuation';
+      }
+    }
+
+    return null;
+  }
+
+  async function handleAddMarker(){
     try{
       if(loading){
         return;
       }
 
-      if(name == ''){
-        throw Error('Please provide name of shop');
+      const error : string | null = validateForm();
+      if(error != null){
+        throw new Error(error);
       }
-
-      if(acceptsANZ == false && acceptsBSP == false){
-        throw new Error('Which card does this shop provide?');
-      }
-
-      if(markerPosition == null){
-        throw new Error('Shop location not found');
-      }
-
 
       const uid = localStorage.getItem('uid');
 
@@ -114,12 +157,13 @@ export function AddShopModal({isOpen, exit, markerPosition} : AddShopModalProps)
       }
 
       const newShop : Shop = {
-        name: name,
+        name: (name == null ? null : name),
         acceptsANZ: acceptsANZ,
         acceptsBSP: acceptsBSP,
-        lat: markerPosition.lat,
-        lng: markerPosition.lng,
+        lat: markerPosition!.lat,
+        lng: markerPosition!.lng,
         uid: uid,
+        type: markerType,
 
         // defaults
         createdAt: new Date().getTime(),
@@ -148,7 +192,7 @@ export function AddShopModal({isOpen, exit, markerPosition} : AddShopModalProps)
       }
 
       const dbPath = collection(db, 'markers');
-      await addDoc(dbPath,newShop)
+      await addDoc(dbPath, newShop)
 
       exitModal();
       
@@ -197,10 +241,11 @@ function Field({title, setValue, value} : FieldProps){
 }
 
 type ImgFieldProps = {
-  onFileChange: (f: File | null) => void
+  onFileChange: (f: File | null) => void,
+  title: string
 }
 
-function ImgField({onFileChange} : ImgFieldProps){
+function ImgField({onFileChange, title} : ImgFieldProps){
   const [fileName, setFileName] = useState<string>('');
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 
@@ -220,10 +265,10 @@ function ImgField({onFileChange} : ImgFieldProps){
 
   return (
     <div className="mb-4 text-gray-600">
-      <p className="mb-2">Picture of Shop (Optional)</p>
+      <p className="mb-2">Picture of {title}</p>
       
       {
-        previewUrl == null && <label htmlFor="image-picker-input" className="cursor-pointer rounded-md p-3 text-sm text-gray-800 text-center bg-gray-200 w-full block hover:bg-blue-500 hover:text-white transition-colors">Upload Photo (Optional)</label>
+        previewUrl == null && <label htmlFor="image-picker-input" className="cursor-pointer rounded-md p-3 text-sm text-gray-800 text-center bg-gray-200 w-full block hover:bg-blue-500 hover:text-white transition-colors">Upload Photo</label>
       }
 
       <input id="image-picker-input" className="hidden" type="file" accept="image/*" onChange={(e) => handleFileChange(e)}/>
@@ -263,6 +308,109 @@ function CardBoxes({onBSPChange, onANZChange, anz, bsp} : CardBoxesProps){
         <input checked={anz} onChange={(e) => onANZChange(e.target.checked)} id="anzCheckBox" type="checkbox" className="bg-gray-300 m-2 w-5 h-5 rounded"/>
         <label htmlFor="anzCheckBox" className="text-gray-800">ANZ</label>
       </div>
+    </div>
+  );
+}
+
+
+type ShopQuestionProps = {
+  name: string,
+  setName: Dispatch<SetStateAction<string>>,
+  acceptsANZ: boolean,
+  setAcceptsANZ: Dispatch<SetStateAction<boolean>>,
+  acceptsBSP: boolean,
+  setAcceptsBSP: Dispatch<SetStateAction<boolean>>,
+  comment: string,
+  setComment: Dispatch<SetStateAction<string>>,
+  setImgFile: Dispatch<SetStateAction<File | null | undefined>>
+}
+
+function ShopQuestions({name, setName, acceptsANZ, acceptsBSP, setAcceptsANZ, setAcceptsBSP, comment, setComment, setImgFile} : ShopQuestionProps){
+  return (
+    <div>
+      <Field title={"Shop Name"} value={name} setValue={setName}/>
+      <ImgField title={"Shop"} onFileChange={(f: File | null) => setImgFile(f)}/>
+      <CardBoxes
+        anz={acceptsANZ}
+        bsp={acceptsBSP}
+        onANZChange={(v) => setAcceptsANZ(v)} 
+        onBSPChange={(v) => setAcceptsBSP(v)}
+      />
+      <div className="mt-3">
+        <Field title={'Comment (Optional)'} setValue={setComment} value={comment}/>
+      </div>
+    </div>
+  );
+}
+
+
+type BusQuestionProps = {
+  name: string,
+  setName: Dispatch<SetStateAction<string>>,
+  setImgFile: Dispatch<SetStateAction<File | null | undefined>>
+}
+
+function BusQuestions({name, setName, setImgFile} : BusQuestionProps){
+  return (
+    <div>
+      <Field title={"Bus Stop Name"} value={name} setValue={setName}/>
+      <ImgField title={"Bus Stop"} onFileChange={(f: File | null) => setImgFile(f)}/>
+    </div>
+  );
+}
+
+type PotHoleQuestionProps = {
+  name: string,
+  setName: Dispatch<SetStateAction<string>>,
+  setImgFile: Dispatch<SetStateAction<File | null | undefined>>,
+  comment: string,
+  setComment: Dispatch<SetStateAction<string>>
+}
+
+function PotHoleQuestions({name, setName, setImgFile, comment, setComment} : PotHoleQuestionProps){
+  return (
+    <div>
+      <Field title={"Pot Hole Name"} value={name} setValue={setName}/>
+      <ImgField title={"Pot Hole"} onFileChange={(f: File | null) => setImgFile(f)}/>
+      <Field title={"Comment (Optional)"} value={comment} setValue={setComment}/>
+    </div>
+  );
+}
+
+
+type ATMQuestionProps = {
+  name: string,
+  setName: Dispatch<SetStateAction<string>>,
+  setImgFile: Dispatch<SetStateAction<File | null | undefined>>
+  comment: string,
+  setComment: Dispatch<SetStateAction<string>>
+}
+
+function ATMQuestions({name, setName, setImgFile, comment, setComment} : ATMQuestionProps){
+  return (
+    <div>
+      <Field title={"ATM Name"} value={name} setValue={setName}/>
+      <ImgField title={"ATM"} onFileChange={(f: File | null) => setImgFile(f)}/>
+      <Field title={"Comment (Optional)"} value={comment} setValue={setComment}/>
+    </div>
+  );
+}
+
+
+type TsunamiEvacuationQuestionProps = {
+  name: string,
+  setName: Dispatch<SetStateAction<string>>,
+  setImgFile: Dispatch<SetStateAction<File | null | undefined>>
+  comment: string,
+  setComment: Dispatch<SetStateAction<string>>
+}
+
+function TsunamiEvacuationQuestions({name, setName, setImgFile, comment, setComment} : TsunamiEvacuationQuestionProps){
+  return (
+    <div>
+      <Field title={"Name"} value={name} setValue={setName}/>
+      <ImgField title={"Tsunami Evacuation Area"} onFileChange={(f: File | null) => setImgFile(f)}/>
+      <Field title={"Comment (Optional)"} value={comment} setValue={setComment}/>
     </div>
   );
 }

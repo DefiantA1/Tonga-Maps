@@ -33,9 +33,7 @@ export default function Home() {
   const [loginModalOpen, setLoginModalOpen] = useState(false);
 
   const [panToPosition, setPanToPosition] = useState<{lat: number, lng: number} | null>(null);
-
   const [shops, setShops] = useState<Shop[]>([]);
-
   const [mapTypeId, setMapTypeId] = useState<'roadmap' | 'satellite'>('roadmap');
 
   const router = useRouter();
@@ -322,7 +320,7 @@ function Sidebar({shops, selectedShop, handleShopTileClick} : SideBarProps){
             shops.length == 0 && <p className="text-gray-500">Loading Shops...</p>
           }
           <ul>
-            {shops.length != 0 && shops.filter((s) => s.name.toLowerCase().includes(search.toLowerCase().trim())).sort((a,b) => a.name.localeCompare(b.name)).map((s) => 
+            {shops.length != 0 && shops.filter((s) => s.name!.toLowerCase().includes(search.toLowerCase().trim())).sort((a,b) => a.name!.localeCompare(b.name!)).map((s) => 
               <li className={`cursor-pointer`} key={s.id} onClick={() => {handleShopTileClick(s)}}>
                 <div className={`flex flex-row gap-4 my-3 items-center p-2 ${selectedShop == s ? 'border border-green-400 bg-green-200 rounded' : ''}`}>
                   <div className="relative h-8 w-8 flex flex-row">
