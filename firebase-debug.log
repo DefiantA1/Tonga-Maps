@@ -1,0 +1,77 @@
+[debug] [2026-07-01T10:41:12.951Z] ----------------------------------------------------------------------
+[debug] [2026-07-01T10:41:12.956Z] Command:       /Users/arthurcocker/.nvm/versions/node/v25.0.0/bin/node /Users/arthurcocker/.nvm/versions/node/v25.0.0/bin/firebase deploy --only functions
+[debug] [2026-07-01T10:41:12.956Z] CLI Version:   15.14.0
+[debug] [2026-07-01T10:41:12.956Z] Platform:      darwin
+[debug] [2026-07-01T10:41:12.956Z] Node Version:  v25.0.0
+[debug] [2026-07-01T10:41:12.956Z] Time:          Wed Jul 01 2026 23:41:12 GMT+1300 (Tonga Standard Time)
+[debug] [2026-07-01T10:41:12.956Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2026-07-01T10:41:14.143Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2026-07-01T10:41:14.143Z] > authorizing via signed-in user (arthurcocker02@gmail.com)
+[debug] [2026-07-01T10:41:14.143Z] [iam] checking project fir-ee965 for permissions ["cloudfunctions.functions.create","cloudfunctions.functions.delete","cloudfunctions.functions.get","cloudfunctions.functions.list","cloudfunctions.functions.update","cloudfunctions.operations.get","firebase.projects.get"]
+[debug] [2026-07-01T10:41:14.144Z] Checked if tokens are valid: true, expires at: 1782904222024
+[debug] [2026-07-01T10:41:14.144Z] Checked if tokens are valid: true, expires at: 1782904222024
+[debug] [2026-07-01T10:41:14.145Z] >>> [apiv2][query] POST https://cloudresourcemanager.googleapis.com/v1/projects/fir-ee965:testIamPermissions [none]
+[debug] [2026-07-01T10:41:14.145Z] >>> [apiv2][(partial)header] POST https://cloudresourcemanager.googleapis.com/v1/projects/fir-ee965:testIamPermissions  x-goog-user-project=fir-ee965
+[debug] [2026-07-01T10:41:14.145Z] >>> [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/fir-ee965:testIamPermissions {"permissions":["cloudfunctions.functions.create","cloudfunctions.functions.delete","cloudfunctions.functions.get","cloudfunctions.functions.list","cloudfunctions.functions.update","cloudfunctions.operations.get","firebase.projects.get"]}
+[debug] [2026-07-01T10:41:14.970Z] <<< [apiv2][status] POST https://cloudresourcemanager.googleapis.com/v1/projects/fir-ee965:testIamPermissions 200
+[debug] [2026-07-01T10:41:14.970Z] <<< [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/fir-ee965:testIamPermissions {"permissions":["cloudfunctions.functions.create","cloudfunctions.functions.delete","cloudfunctions.functions.get","cloudfunctions.functions.list","cloudfunctions.functions.update","cloudfunctions.operations.get","firebase.projects.get"]}
+[debug] [2026-07-01T10:41:14.971Z] Checked if tokens are valid: true, expires at: 1782904222024
+[debug] [2026-07-01T10:41:14.971Z] Checked if tokens are valid: true, expires at: 1782904222024
+[debug] [2026-07-01T10:41:14.971Z] >>> [apiv2][query] POST https://iam.googleapis.com/v1/projects/fir-ee965/serviceAccounts/fir-ee965@appspot.gserviceaccount.com:testIamPermissions [none]
+[debug] [2026-07-01T10:41:14.971Z] >>> [apiv2][body] POST https://iam.googleapis.com/v1/projects/fir-ee965/serviceAccounts/fir-ee965@appspot.gserviceaccount.com:testIamPermissions {"permissions":["iam.serviceAccounts.actAs"]}
+[debug] [2026-07-01T10:41:15.539Z] <<< [apiv2][status] POST https://iam.googleapis.com/v1/projects/fir-ee965/serviceAccounts/fir-ee965@appspot.gserviceaccount.com:testIamPermissions 200
+[debug] [2026-07-01T10:41:15.540Z] <<< [apiv2][body] POST https://iam.googleapis.com/v1/projects/fir-ee965/serviceAccounts/fir-ee965@appspot.gserviceaccount.com:testIamPermissions {"permissions":["iam.serviceAccounts.actAs"]}
+[info] 
+[info] === Deploying to 'fir-ee965'...
+[info] 
+[info] i  deploying functions 
+[info] Running command: npm --prefix "$RESOURCE_DIR" run build
+[info] ✔  functions: Finished running predeploy script. 
+[debug] [2026-07-01T10:41:18.706Z] Checked if tokens are valid: true, expires at: 1782904222024
+[debug] [2026-07-01T10:41:18.706Z] Checked if tokens are valid: true, expires at: 1782904222024
+[debug] [2026-07-01T10:41:18.706Z] >>> [apiv2][query] GET https://cloudresourcemanager.googleapis.com/v1/projects/fir-ee965 [none]
+[debug] [2026-07-01T10:41:19.045Z] <<< [apiv2][status] GET https://cloudresourcemanager.googleapis.com/v1/projects/fir-ee965 200
+[debug] [2026-07-01T10:41:19.045Z] <<< [apiv2][body] GET https://cloudresourcemanager.googleapis.com/v1/projects/fir-ee965 {"projectNumber":"311177337445","projectId":"fir-ee965","lifecycleState":"ACTIVE","name":"demo","labels":{"firebase":"enabled","firebase-core":"disabled"},"createTime":"2026-06-10T03:19:27.305Z"}
+[info] i  functions: preparing codebase default for deployment 
+[info] i  functions: ensuring required API cloudfunctions.googleapis.com is enabled... 
+[info] i  functions: ensuring required API cloudbuild.googleapis.com is enabled... 
+[info] i  artifactregistry: ensuring required API artifactregistry.googleapis.com is enabled... 
+[debug] [2026-07-01T10:41:19.048Z] Checked if tokens are valid: true, expires at: 1782904222024
+[debug] [2026-07-01T10:41:19.048Z] Checked if tokens are valid: true, expires at: 1782904222024
+[debug] [2026-07-01T10:41:19.048Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/fir-ee965/adminSdkConfig [none]
+[debug] [2026-07-01T10:41:20.089Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/fir-ee965/adminSdkConfig 200
+[debug] [2026-07-01T10:41:20.089Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/fir-ee965/adminSdkConfig {"projectId":"fir-ee965","storageBucket":"fir-ee965.firebasestorage.app"}
+[debug] [2026-07-01T10:41:20.094Z] Validating nodejs source
+[debug] [2026-07-01T10:41:21.001Z] > [functions] package.json contents: {
+  "name": "functions",
+  "scripts": {
+    "build": "tsc",
+    "build:watch": "tsc --watch",
+    "serve": "npm run build && firebase emulators:start --only functions",
+    "shell": "npm run build && firebase functions:shell",
+    "start": "npm run shell",
+    "deploy": "firebase deploy --only functions",
+    "logs": "firebase functions:log"
+  },
+  "engines": {
+    "node": "22"
+  },
+  "main": "lib/index.js",
+  "dependencies": {
+    "firebase-admin": "^12.6.0",
+    "firebase-functions": "^6.0.1"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.3",
+    "firebase-functions-test": "^3.1.0"
+  },
+  "private": true
+}
+[debug] [2026-07-01T10:41:21.001Z] Building nodejs source
+[info] i  functions: Loading and analyzing source code for codebase default to determine what to deploy 
+[debug] [2026-07-01T10:41:21.001Z] Could not find functions.yaml. Must use http discovery
+[debug] [2026-07-01T10:41:21.006Z] Found firebase-functions binary at '/Users/arthurcocker/WebDev/NextJs/tonga-maps/node_modules/.bin/firebase-functions'
+[info] Serving at port 8514
+
+[debug] [2026-07-01T10:41:21.302Z] Got response from /__/functions.yaml {"endpoints":{"sendEmail":{"availableMemoryMb":null,"timeoutSeconds":null,"minInstances":null,"maxInstances":10,"ingressSettings":null,"concurrency":null,"serviceAccountEmail":null,"vpc":null,"platform":"gcfv2","labels":{},"httpsTrigger":{},"entryPoint":"sendEmail"}},"specVersion":"v1alpha1","requiredAPIs":[],"extensions":{}}
